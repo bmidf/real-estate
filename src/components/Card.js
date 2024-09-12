@@ -38,7 +38,7 @@ const CustomCard = ({ realEstate }) => {
                     alt={realEstate.address} 
                 />
                 <button 
-                    className='firaGoMedium' 
+                    className='firaGoBook'
                     style={{ 
                         position: 'absolute', 
                         top: '20px',  
@@ -54,8 +54,8 @@ const CustomCard = ({ realEstate }) => {
                     {realEstate.is_rental === 0 ? "იყიდება" : "ქირავდება"}
                 </button>
             </div>
-            <Card.Body className='firaGoBold' style={{ textAlign: 'left' }}>
-                <Card.Title style={{ fontWeight: 'bold', fontSize: '30px' }}>
+            <Card.Body className='firaGoBook'  style={{ textAlign: 'left' }}>
+                <Card.Title className='firaGoBold' style={{ fontWeight: 'bold', fontSize: '30px' }}>
                     {realEstate.price} ₾
                 </Card.Title>
                 <div style={{ display: 'flex', alignItems: 'center', marginTop: '15px', color: 'grey' }}>

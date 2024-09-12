@@ -48,8 +48,19 @@
   src: local('FiraGO-Medium'), url('./assets/fonts/FiraGO-Medium.ttf') format('truetype');
 }
 
+@font-face {
+  font-family: 'FiraGO-Light';
+  src: local('FiraGO-Light'), url('./assets/fonts/FiraGO-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'FiraGO-Book';
+  src: local('FiraGO-Book'), url('./assets/fonts/FiraGO-Book.ttf') format('truetype');
+}
+
+
 body {
-  font-family: 'FiraGO-Medium', sans-serif;
+  font-family: 'FiraGO-Bold', sans-serif;
 }
 
 .firaGoBold {
@@ -58,4 +69,12 @@ body {
 
 .firaGoMedium {
   font-family: 'FiraGO-Medium', sans-serif;
+}
+
+.firaGoLight {
+  font-family: 'FiraGO-Light', sans-serif;
+}
+
+.firaGoBook {
+  font-family: 'FiraGO-Book', sans-serif;
 }
