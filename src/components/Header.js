@@ -1,12 +1,14 @@
 import React from 'react';
+import Container from 'react-bootstrap/Container';
+import Navbar from 'react-bootstrap/Navbar';
 
 const Header = () => {
   return (
-    <header style={{marginLeft: '8%', marginRight: '8%', textAlign: 'left', padding: '20px', color: 'red'}}>
-      <div>
-          <h1>REDBERRY</h1>
-      </div>
-    </header>
+    <Navbar className="bg-white FiraGo" style={{ height: '100px', backgroundColor: 'white' }}>
+      <Container>
+        <Navbar.Brand href="#home" style={{color: 'red', fontWeight: 'bold'}}>REDBERRY</Navbar.Brand>
+      </Container>
+    </Navbar>
   );
 };
 

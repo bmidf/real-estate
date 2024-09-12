@@ -36,3 +36,26 @@
     transform: rotate(360deg);
   }
 }
+
+
+@font-face {
+  font-family: 'FiraGO-Bold';
+  src: local('FiraGO-Bold'), url('./assets/fonts/FiraGO-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'FiraGO-Medium';
+  src: local('FiraGO-Medium'), url('./assets/fonts/FiraGO-Medium.ttf') format('truetype');
+}
+
+body {
+  font-family: 'FiraGO-Medium', sans-serif;
+}
+
+.firaGoBold {
+  font-family: 'FiraGO-Bold', sans-serif;
+}
+
+.firaGoMedium {
+  font-family: 'FiraGO-Medium', sans-serif;
+}
