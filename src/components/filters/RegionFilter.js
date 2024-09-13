@@ -34,23 +34,28 @@ const RegionFilter = ({ onRegionFilter }) => {
 
     return (
         <Container style={{ padding: '20px', width: '731px' }}>
-            <Row>
-                <label style={{ marginBottom: '20px' }}>რეგიონის მიხედვით</label>
-                {regions.map((region) => (
-                    <Col className='firaGoBook' key={region.id} xs={4}>
-                        <Form.Check
-                            type="checkbox"
-                            id={`region-${region.id}`}
-                            value={region.id}
-                            checked={selectedRegions.includes(region.id)}
-                            onChange={() => handleRegionSelect(region.id)}
-                            label={region.name}
-                        />
-                    </Col>
-                ))}
-            </Row>
+                <Row>
+                    <label style={{ marginBottom: '20px' }}>რეგიონის მიხედვით</label>
+                    {regions.map((region) => (
+                        <Col className='firaGoBook' key={region.id} xs={4}>
+                            <Form.Check
+                                type="checkbox"
+                                id={`region-${region.id}`}
+                                value={region.id}
+                                checked={selectedRegions.includes(region.id)}
+                                onChange={() => handleRegionSelect(region.id)}
+                                label={region.name}
+                                style={{ '--bs-form-check-input-active-bg': 'green' }}
+                            />
+                        </Col>
+                    ))}
+                </Row>
             <Row className="d-flex justify-content-end" style={{ margin: '20px 20px 5px 0px' }}>
-                <Button variant="danger" onClick={handleFilterApply} style={{ width: '85px' }}>
+                <Button                     
+                    style={{ marginTop: '20px', width: '85px', backgroundColor: '#F93B1D', borderColor: '#F93B1D' }} 
+                    onClick={handleFilterApply}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = '#DF3014'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = '#F93B1D'}>
                     არჩევა
                 </Button>
             </Row>

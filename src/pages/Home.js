@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/Button';
 const Home = () => {
     const [realEstates, setRealEstates] = useState([]);
     const [filteredRealEstates, setFilteredRealEstates] = useState([]);
-    const [filters, setFilters] = useState({ regions: [], price: { min: '', max: '' } });
+    const [filters, setFilters] = useState({regions: [], price: { min: '', max: '' },area: { min: '', max: '' }, bedrooms: '',});
 
     useEffect(() => {
         const fetchData = async () => {
@@ -31,8 +31,8 @@ const Home = () => {
         fetchData();
     }, []);
 
-    const handleFilter = ({ regions, price }) => {
-        setFilters({ regions, price });
+    const handleFilter = ({ regions, price, area, bedrooms }) => {
+        setFilters({ regions, price, area, bedrooms });
 
         let filtered = realEstates;
 
@@ -50,24 +50,38 @@ const Home = () => {
             );
         }
 
+        if (area.min || area.max) {
+            const minArea = parseFloat(area.min) || 0;
+            const maxArea = parseFloat(area.max) || Infinity;
+            filtered = filtered.filter((realEstate) =>
+                realEstate.area >= minArea && realEstate.area <= maxArea
+            );
+        }
+
+        if (bedrooms) {
+            filtered = filtered.filter((realEstate) =>
+                realEstate.bedrooms === parseInt(bedrooms)
+            );
+        }
+
         setFilteredRealEstates(filtered);
     };
 
     const clearFilters = () => {
-        setFilters({ regions: [], price: { min: '', max: '' } }); 
+        setFilters({ regions: [], price: { min: '', max: '' }, area: { min: '', max: '' }, bedrooms: '' });
         setFilteredRealEstates(realEstates);
     };
 
-    const isFilterApplied = filters.regions.length > 0 || filters.price.min || filters.price.max;
-    
+    const isFilterApplied = filters.regions.length > 0 || filters.price.min || filters.price.max || filters.area.min || filters.area.max || filters.bedrooms;
+
     if (realEstates.length === 0) {
         return <div>Loading...</div>;
     }
 
     return (
         <Container>
-            <Filter onFilter={handleFilter} />
-            <Row className="d-flex justify-content-start align-items-center firaGoBold" style={{marginTop: '10px'}}>
+            <Filter onFilter={handleFilter} filters={filters} />
+            <Row className="d-flex justify-content-start align-items-center firaGoBold" style={{ marginTop: '20px' }}>
                 <Col xs="auto">
                     <FilterSummary filters={filters} />
                 </Col>
@@ -77,13 +91,20 @@ const Home = () => {
                     </Col>
                 )}
             </Row>
-            <Row>
-                {filteredRealEstates.map((realEstate, index) => (
-                    <Col key={index} xs={12} sm={6} md={4} lg={3}>
-                        <CustomCard realEstate={realEstate} />
-                    </Col>
-                ))}
-            </Row>
+
+            {filteredRealEstates.length === 0 ? (
+                <div className="firaGoBook d-flex justify-content-start" style={{ marginTop: '60px', textAlign: 'center' }}>
+                    აღნიშნული მონაცემებით განცხადება არ იძებნება
+                </div>
+            ) : (
+                <Row>
+                    {filteredRealEstates.map((realEstate, index) => (
+                        <Col key={index} xs={12} sm={6} md={4} lg={3}>
+                            <CustomCard realEstate={realEstate} />
+                        </Col>
+                    ))}
+                </Row>
+            )}
         </Container>
     );
 };

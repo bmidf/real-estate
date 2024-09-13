@@ -1,34 +1,34 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Button, Form, InputGroup } from 'react-bootstrap';
 
-const PriceFilter = ({ onPriceFilter }) => {
-    const [minPrice, setMinPrice] = useState('');
-    const [maxPrice, setMaxPrice] = useState('');
+const AreaFilter = ({ onAreaFilter }) => {
+    const [minArea, setMinArea] = useState('');
+    const [maxArea, setMaxArea] = useState('');
     const [error, setError] = useState('');
 
     const handleApply = () => {
-        if (Number(maxPrice) < Number(minPrice)) {
+        if (Number(maxArea) < Number(minArea)) {
             setError('გთხოვთ შეიყვანოთ ვალიდური რიცხვები');
         } else {
             setError('');
-            onPriceFilter({ min: minPrice, max: maxPrice });
-            setMinPrice(''); 
-            setMaxPrice(''); 
+            onAreaFilter({ min: minArea, max: maxArea });
+            setMinArea(''); 
+            setMaxArea(''); 
         }
     };
 
-    const handleMinPriceSelect = (price) => {
-        setMinPrice(price);
-        if (Number(price) > Number(maxPrice) && maxPrice !== '') {
+    const handleMinAreaSelect = (area) => {
+        setMinArea(area);
+        if (Number(area) > Number(maxArea) && maxArea !== '') {
             setError('გთხოვთ შეიყვანოთ ვალიდური რიცხვები');
         } else {
             setError('');
         }
     };
 
-    const handleMaxPriceSelect = (price) => {
-        setMaxPrice(price);
-        if (Number(price) < Number(minPrice) && minPrice !== '') {
+    const handleMaxAreaSelect = (area) => {
+        setMaxArea(area);
+        if (Number(area) < Number(minArea) && minArea !== '') {
             setError('გთხოვთ შეიყვანოთ ვალიდური რიცხვები');
         } else {
             setError('');
@@ -37,20 +37,20 @@ const PriceFilter = ({ onPriceFilter }) => {
     
     return (
         <Container style={{ padding: '20px', width: '382px' }}>
-            <Form.Label>ფასის მიხედვით</Form.Label>
+            <Form.Label>ფართობის მიხედვით</Form.Label>
             <Row style={{ marginTop: '20px' }}>
                 <Col>
                     <Form.Group>
                         <InputGroup>
                             <Form.Control
                                 type="number"
-                                value={minPrice}
+                                value={minArea}
                                 placeholder='დან'
                                 className='firaGoBook'
-                                onChange={(e) => setMinPrice(e.target.value)}
-                                style={error ? { borderColor: 'red', boxShadow: '0 0 0 .1rem rgba(255, 0, 0, .25)' } : {}}
+                                onChange={(e) => setMinArea(e.target.value)}
+                                style={error ? { borderColor: 'red', boxShadow: '0 0 0 .2rem rgba(255, 0, 0, .25)' } : {}}
                             />
-                            <InputGroup.Text>₾</InputGroup.Text>
+                            <InputGroup.Text>მ²</InputGroup.Text>
                         </InputGroup>
                     </Form.Group>
                 </Col>
@@ -59,13 +59,13 @@ const PriceFilter = ({ onPriceFilter }) => {
                         <InputGroup>
                             <Form.Control
                                 type="number"
-                                value={maxPrice}
+                                value={maxArea}
                                 placeholder="მდე"
                                 className='firaGoBook'
-                                onChange={(e) => setMaxPrice(e.target.value)}
-                                style={error ? { borderColor: 'red', boxShadow: '0 0 0 .1rem rgba(255, 0, 0, .25)' } : {}}
+                                onChange={(e) => setMaxArea(e.target.value)}
+                                style={error ? { borderColor: 'red', boxShadow: '0 0 0 .2rem rgba(255, 0, 0, .25)' } : {}}
                             />
-                            <InputGroup.Text>₾</InputGroup.Text>
+                            <InputGroup.Text>მ²</InputGroup.Text>
                         </InputGroup>
                     </Form.Group>
                 </Col>
@@ -81,39 +81,40 @@ const PriceFilter = ({ onPriceFilter }) => {
             )}
             <Row style={{ marginTop: '20px' }}>
                 <Col>
-                    <Form.Label>მინ. ფასი</Form.Label>
-                    {[50000, 100000, 150000, 200000, 250000, 300000].map((price) => (
+                    <Form.Label>მინ. მ²</Form.Label>
+                    {[50, 100, 150, 200, 250, 300].map((area) => (
                         <Form.Label 
                             className='firaGoBook'
-                            key={price}
-                            onClick={() => handleMinPriceSelect(price)}
+                            key={area}
+                            onClick={() => handleMinAreaSelect(area)}
                             style={{ cursor: 'pointer', display: 'block', marginBottom: '5px' }}
                         >
-                            {price.toLocaleString()} ₾
+                            {area.toLocaleString()} მ²
                         </Form.Label>
                     ))}
                 </Col>
                 <Col>
-                    <Form.Label>მაქს. ფასი</Form.Label>
-                    {[50000, 100000, 150000, 200000, 250000, 300000].map((price) => (
+                    <Form.Label>მაქს. მ²</Form.Label>
+                    {[50, 100, 150, 200, 250, 300].map((area) => (
                         <Form.Label
                             className='firaGoBook'
-                            key={price}
-                            onClick={() => handleMaxPriceSelect(price)}
+                            key={area}
+                            onClick={() => handleMaxAreaSelect(area)}
                             style={{ cursor: 'pointer', display: 'block', marginBottom: '5px' }}
                         >
-                            {price.toLocaleString()} ₾
+                            {area.toLocaleString()} მ²
                         </Form.Label>
                     ))}
                 </Col>
             </Row>
 
             <Row className="justify-content-end me-2">
-                <Button                     
+                <Button 
                     style={{ marginTop: '20px', width: '85px', backgroundColor: '#F93B1D', borderColor: '#F93B1D' }} 
                     onClick={handleApply}
                     onMouseEnter={(e) => e.target.style.backgroundColor = '#DF3014'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = '#F93B1D'}>
+                    onMouseLeave={(e) => e.target.style.backgroundColor = '#F93B1D'}
+                >
                     არჩევა
                 </Button>
             </Row>
@@ -121,4 +122,4 @@ const PriceFilter = ({ onPriceFilter }) => {
     );
 };
 
-export default PriceFilter;
+export default AreaFilter;
