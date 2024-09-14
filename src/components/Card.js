@@ -3,24 +3,20 @@ import Card from 'react-bootstrap/Card';
 import { IoIosBed } from "react-icons/io";
 import { PiCheckSquareOffsetFill } from "react-icons/pi";
 import { BsSignpostFill } from "react-icons/bs";
-import  { FaMapMarkerAlt } from "react-icons/fa";
+import { FaMapMarkerAlt } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 const CustomCard = ({ realEstate }) => {
+    const navigate = useNavigate();
+
     const handleExploreClick = () => {
-        window.location.href = `/`;
+        navigate(`/real-estate/${realEstate.id}`);
     };
 
     return (
         <Card 
-            style={{
-                marginTop: '10px', 
-                width: '20rem', 
-                height: '455px', 
-                cursor: 'pointer', 
-                transition: 'box-shadow 0.3s', 
-                border: '1px solid #dedede', 
-                borderRadius: '15px'
-            }} 
+            style={{marginTop: '10px', width: '20rem', height: '455px', cursor: 'pointer', 
+                transition: 'box-shadow 0.3s', border: '1px solid #dedede', borderRadius: '15px'}} 
             className="hoverable-card"
             onMouseEnter={(e) => e.currentTarget.style.boxShadow = '4px 4px 12px rgba(0, 0, 0, 0.2)'}
             onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'none'}
@@ -37,20 +33,9 @@ const CustomCard = ({ realEstate }) => {
                     src={realEstate.image} 
                     alt={realEstate.address} 
                 />
-                <button 
-                    className='firaGoBook'
-                    style={{ 
-                        position: 'absolute', 
-                        top: '20px',  
-                        left: '20px', 
-                        backgroundColor: '#02152680', 
-                        color: 'white',  
-                        border: '0px solid #02152680',
-                        borderRadius: '15px', 
-                        padding: '5px 10px', 
-                        cursor: 'pointer'  
-                    }}
-                >
+                <button className='firaGoBook'
+                    style={{width: '90px', position: 'absolute', top: '20px', left: '20px', backgroundColor: '#02152680', color: 'white',  
+                        borderRadius: '15px', padding: '5px 10px', fontSize: '12px', textAlign: 'center',  border: '0px solid #02152680' }}>
                     {realEstate.is_rental === 0 ? "იყიდება" : "ქირავდება"}
                 </button>
             </div>

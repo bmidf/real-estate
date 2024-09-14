@@ -94,7 +94,7 @@ const FilterSummary = ({ filters }) => {
 
     return (
         <Row className="mb-2 align-items-center" style={{marginTop: '6px'}}>
-            <Col>
+            <Col style={{fontSize: '14px'}}>
                 {renderRegions()} {renderPrice()} {renderArea()} {renderBedrooms()}
             </Col>
         </Row>

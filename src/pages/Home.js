@@ -106,7 +106,7 @@ const Home = () => {
                 </Col>
                 {isFilterApplied && (
                     <Col xs="auto">
-                        <Button variant='white' onClick={clearFilters}>გასუფთავება</Button>
+                        <Button variant='white' onClick={clearFilters} style={{fontSize: '14px'}}>გასუფთავება</Button>
                     </Col>
                 )}
             </Row>
