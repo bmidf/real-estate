@@ -68,7 +68,7 @@ const Filter = ({ onFilter, filters }) => {
                         className="me-2">
                         <span style={{ marginRight: '5px' }}>+</span>ლისტინგის დამატება
                     </Button>
-                    <Button style={{ borderColor: '#F93B1D', color: '#F93B1D' }} 
+                    <Button style={{backgroundColor: 'white', borderColor: '#F93B1D', color: '#F93B1D' }} 
                         onMouseEnter={(e) => {
                             e.target.style.backgroundColor = '#F93B1D';
                             e.target.style.borderColor = '#F93B1D';

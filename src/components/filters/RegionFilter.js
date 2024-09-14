@@ -28,7 +28,12 @@ const RegionFilter = ({ onRegionFilter }) => {
     };
 
     const handleFilterApply = () => {
-        onRegionFilter(selectedRegions);
+        const selectedRegionNames = selectedRegions.map((regionId) => {
+            const region = regions.find(r => r.id === regionId);
+            return region ? region.name : '';
+        });
+
+        onRegionFilter(selectedRegionNames);
         setSelectedRegions([]);
     };
 
@@ -45,7 +50,7 @@ const RegionFilter = ({ onRegionFilter }) => {
                                 checked={selectedRegions.includes(region.id)}
                                 onChange={() => handleRegionSelect(region.id)}
                                 label={region.name}
-                                style={{ '--bs-form-check-input-active-bg': 'green' }}
+                                className="custom-checkbox" 
                             />
                         </Col>
                     ))}

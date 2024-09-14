@@ -48,7 +48,7 @@ const PriceFilter = ({ onPriceFilter }) => {
                                 placeholder='დან'
                                 className='firaGoBook'
                                 onChange={(e) => setMinPrice(e.target.value)}
-                                style={error ? { borderColor: 'red', boxShadow: '0 0 0 .1rem rgba(255, 0, 0, .25)' } : {}}
+                                style={error ? { borderColor: 'red', boxShadow: '0 0 0 .1rem rgba(255, 0, 0, .25)' } : { boxShadow: '0 0 0 0 #fff' }}
                             />
                             <InputGroup.Text>₾</InputGroup.Text>
                         </InputGroup>
@@ -63,7 +63,7 @@ const PriceFilter = ({ onPriceFilter }) => {
                                 placeholder="მდე"
                                 className='firaGoBook'
                                 onChange={(e) => setMaxPrice(e.target.value)}
-                                style={error ? { borderColor: 'red', boxShadow: '0 0 0 .1rem rgba(255, 0, 0, .25)' } : {}}
+                                style={error ? { borderColor: 'red', boxShadow: '0 0 0 .1rem rgba(255, 0, 0, .25)' } : { boxShadow: '0 0 0 0 #fff' }}
                             />
                             <InputGroup.Text>₾</InputGroup.Text>
                         </InputGroup>

@@ -13,6 +13,13 @@ const Home = () => {
     const [filters, setFilters] = useState({regions: [], price: { min: '', max: '' },area: { min: '', max: '' }, bedrooms: '',});
 
     useEffect(() => {
+        const savedFilters = JSON.parse(localStorage.getItem('filters'));
+        if (savedFilters) {
+            setFilters(savedFilters);
+        }
+    }, []);
+
+    useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await fetch('https://api.real-estate-manager.redberryinternship.ge/api/real-estates', {
@@ -31,45 +38,57 @@ const Home = () => {
         fetchData();
     }, []);
 
-    const handleFilter = ({ regions, price, area, bedrooms }) => {
-        setFilters({ regions, price, area, bedrooms });
+    useEffect(() => {
+        if (realEstates.length > 0) {
+            applyFilters(filters);
+        }
+    }, [filters, realEstates]);
 
+    const applyFilters = (activeFilters) => {
         let filtered = realEstates;
 
-        if (regions.length > 0) {
+        if (activeFilters.regions.length > 0) {
             filtered = filtered.filter((realEstate) =>
-                regions.includes(realEstate.city.region_id)
+                activeFilters.regions.includes(realEstate.city.region.name)
             );
         }
 
-        if (price.min || price.max) {
-            const min = parseFloat(price.min) || 0;
-            const max = parseFloat(price.max) || Infinity;
+        if (activeFilters.price.min || activeFilters.price.max) {
+            const min = parseFloat(activeFilters.price.min) || 0;
+            const max = parseFloat(activeFilters.price.max) || Infinity;
             filtered = filtered.filter((realEstate) =>
                 realEstate.price >= min && realEstate.price <= max
             );
         }
 
-        if (area.min || area.max) {
-            const minArea = parseFloat(area.min) || 0;
-            const maxArea = parseFloat(area.max) || Infinity;
+        if (activeFilters.area.min || activeFilters.area.max) {
+            const minArea = parseFloat(activeFilters.area.min) || 0;
+            const maxArea = parseFloat(activeFilters.area.max) || Infinity;
             filtered = filtered.filter((realEstate) =>
                 realEstate.area >= minArea && realEstate.area <= maxArea
             );
         }
 
-        if (bedrooms) {
+        if (activeFilters.bedrooms) {
             filtered = filtered.filter((realEstate) =>
-                realEstate.bedrooms === parseInt(bedrooms)
+                realEstate.bedrooms === parseInt(activeFilters.bedrooms)
             );
         }
 
         setFilteredRealEstates(filtered);
     };
 
+    const handleFilter = ({ regions, price, area, bedrooms }) => {
+        const newFilters = { regions, price, area, bedrooms };
+        setFilters(newFilters);
+        localStorage.setItem('filters', JSON.stringify(newFilters));
+    };
+
     const clearFilters = () => {
-        setFilters({ regions: [], price: { min: '', max: '' }, area: { min: '', max: '' }, bedrooms: '' });
+        const defaultFilters = {regions: [], price: { min: '', max: '' }, area: { min: '', max: '' }, bedrooms: '',};
+        setFilters(defaultFilters);
         setFilteredRealEstates(realEstates);
+        localStorage.removeItem('filters');
     };
 
     const isFilterApplied = filters.regions.length > 0 || filters.price.min || filters.price.max || filters.area.min || filters.area.max || filters.bedrooms;

@@ -48,7 +48,7 @@ const AreaFilter = ({ onAreaFilter }) => {
                                 placeholder='დან'
                                 className='firaGoBook'
                                 onChange={(e) => setMinArea(e.target.value)}
-                                style={error ? { borderColor: 'red', boxShadow: '0 0 0 .2rem rgba(255, 0, 0, .25)' } : {}}
+                                style={error ? { borderColor: 'red', boxShadow: '0 0 0 .1rem rgba(255, 0, 0, .25)' } : { boxShadow: '0 0 0 0 #fff' }}
                             />
                             <InputGroup.Text>მ²</InputGroup.Text>
                         </InputGroup>
@@ -63,7 +63,7 @@ const AreaFilter = ({ onAreaFilter }) => {
                                 placeholder="მდე"
                                 className='firaGoBook'
                                 onChange={(e) => setMaxArea(e.target.value)}
-                                style={error ? { borderColor: 'red', boxShadow: '0 0 0 .2rem rgba(255, 0, 0, .25)' } : {}}
+                                style={error ? { borderColor: 'red', boxShadow: '0 0 0 .1rem rgba(255, 0, 0, .25)' } : { boxShadow: '0 0 0 0 #fff' }}
                             />
                             <InputGroup.Text>მ²</InputGroup.Text>
                         </InputGroup>

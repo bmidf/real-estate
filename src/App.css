@@ -28,6 +28,21 @@
   color: #61dafb;
 }
 
+.custom-checkbox .form-check-input:checked {
+  box-shadow: 0 0 0 0 #fff;
+  background-color: green;
+  border-color: green;
+  border: none;
+}
+
+.custom-checkbox .form-check-input:checked:focus {
+  box-shadow: 0 0 0 0 #fff;
+}
+
+.custom-checkbox .form-check-input {
+  cursor: pointer;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
