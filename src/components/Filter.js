@@ -61,13 +61,9 @@ const Filter = ({ onFilter, filters }) => {
                     </DropdownButton>
                 </Col>
                 <Col className="d-flex justify-content-end">
-                    <Button                     
-                        style={{backgroundColor: '#F93B1D', borderColor: '#F93B1D' }} 
-                        onMouseEnter={(e) => e.target.style.backgroundColor = '#DF3014'}
-                        onMouseLeave={(e) => e.target.style.backgroundColor = '#F93B1D'} 
-                        className="me-2">
+                    <button className="custom-button firaGoBold me-2"  >
                         <span style={{ marginRight: '5px' }}>+</span>ლისტინგის დამატება
-                    </Button>
+                    </button>
                     <Button style={{backgroundColor: 'white', borderColor: '#F93B1D', color: '#F93B1D' }} 
                         onMouseEnter={(e) => {
                             e.target.style.backgroundColor = '#F93B1D';

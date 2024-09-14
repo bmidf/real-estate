@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, Row } from 'react-bootstrap';
+import {Form, Row } from 'react-bootstrap';
 
 const BedroomCount = ({ onBedroomCountFilter }) => {
     const [bedroomCount, setBedroomCount] = useState('');
@@ -22,13 +22,9 @@ const BedroomCount = ({ onBedroomCountFilter }) => {
                 />
             </Form.Group>
             <Row className="justify-content-end me-2">
-                <Button                     
-                    style={{ marginTop: '20px', width: '85px', backgroundColor: '#F93B1D', borderColor: '#F93B1D' }} 
-                    onClick={handleApply}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#DF3014'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = '#F93B1D'}>
+                <button className="custom-button firaGoBold" style={{ marginTop: '20px', width: '85px'}} onClick={handleApply}>
                     არჩევა
-                </Button>
+                </button>
             </Row>
         </div>
     );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Form } from 'react-bootstrap';
+import { Container, Row, Col, Form } from 'react-bootstrap';
 
 const RegionFilter = ({ onRegionFilter }) => {
     const [regions, setRegions] = useState([]);
@@ -55,14 +55,10 @@ const RegionFilter = ({ onRegionFilter }) => {
                         </Col>
                     ))}
                 </Row>
-            <Row className="d-flex justify-content-end" style={{ margin: '20px 20px 5px 0px' }}>
-                <Button                     
-                    style={{ marginTop: '20px', width: '85px', backgroundColor: '#F93B1D', borderColor: '#F93B1D' }} 
-                    onClick={handleFilterApply}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#DF3014'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = '#F93B1D'}>
+            <Row className="justify-content-end me-2">
+                <button className="custom-button firaGoBold" style={{ marginTop: '20px', width: '85px'}} onClick={handleFilterApply}>
                     არჩევა
-                </Button>
+                </button>
             </Row>
         </Container>
     );

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Button, Form, InputGroup } from 'react-bootstrap';
+import { Container, Row, Col, Form, InputGroup } from 'react-bootstrap';
 
 const PriceFilter = ({ onPriceFilter }) => {
     const [minPrice, setMinPrice] = useState('');
@@ -109,13 +109,9 @@ const PriceFilter = ({ onPriceFilter }) => {
             </Row>
 
             <Row className="justify-content-end me-2">
-                <Button                     
-                    style={{ marginTop: '20px', width: '85px', backgroundColor: '#F93B1D', borderColor: '#F93B1D' }} 
-                    onClick={handleApply}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#DF3014'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = '#F93B1D'}>
+                <button className="custom-button firaGoBold" style={{ marginTop: '20px', width: '85px'}} onClick={handleApply}>
                     არჩევა
-                </Button>
+                </button>
             </Row>
         </Container>
     );
