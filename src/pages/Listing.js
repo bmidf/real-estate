@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Card, Col, Row, Image, Button } from 'react-bootstrap';
+import { Container, Card, Col, Row, Image, Button, Modal } from 'react-bootstrap';
 import { IoIosBed } from "react-icons/io";
 import { PiCheckSquareOffsetFill } from "react-icons/pi";
 import { BsSignpostFill } from "react-icons/bs";
@@ -14,6 +14,10 @@ import { useNavigate } from 'react-router-dom';
 const Listing = () => {
     const { id } = useParams();
     const [realEstate, setRealEstate] = useState(null);
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     const navigate = useNavigate();
 
@@ -34,6 +38,20 @@ const Listing = () => {
 
         fetchRealEstate();
     }, [id]);
+
+    const deleteRealEstate = async () => {
+        try {
+            await fetch(`https://api.real-estate-manager.redberryinternship.ge/api/real-estates/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': 'Bearer 9cfc6240-ffc9-44ab-b4ed-b792a03c592f',
+                },
+            });
+            navigate(-1);
+        } catch (error) {
+            console.error('Error deleting real estate:', error);
+        }
+    };
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -154,9 +172,44 @@ const Listing = () => {
                                 e.target.style.backgroundColor = 'transparent';
                                 e.target.style.borderColor = '#808A93';
                                 e.target.style.color = '#808A93'
-                            }}>
+                            }}
+                            onClick={handleShow}>
                             ლისტინგის წაშლა
                         </Button>
+                        <Modal size='lg' aria-labelledby="contained-modal-title-vcenter" centered show={show} onHide={handleClose} animation={false}>
+                            <Modal.Body className="text-center d-flex flex-column justify-content-center" style={{ height: '222px', fontSize: '20px'}}>
+                                <button type="button" onClick={handleClose}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    position: 'absolute',
+                                    right: '15px',
+                                    top: '10px',
+                                    cursor: 'pointer',
+                                    fontSize: '47px',
+                                    width: '47px',
+                                    height: '47px',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    color: '#2D3648'
+                                }}
+                                >
+                                &times;
+                                </button>
+                                <Row className="justify-content-center mb-4 firaGoBook">
+                                    გსურთ წაშალოთ ლისტინგი?
+                                </Row>
+                                <Row className="d-flex justify-content-center firaGoBook" style={{fontSize: '16px'}}>
+                                    <button className='custom-button-2' onClick={handleClose} style={{width: '103px',marginRight: '10px', height: '47px' }}>
+                                        გაუქმება
+                                    </button>
+                                    <button className='custom-button' onClick={deleteRealEstate} style={{width: '145px'}}>
+                                        დადასტურება
+                                    </button>
+                                </Row>
+                            </Modal.Body>
+                        </Modal>
                     </div>
                 </Col>
             </Row>

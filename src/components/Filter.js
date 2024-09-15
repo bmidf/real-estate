@@ -64,19 +64,9 @@ const Filter = ({ onFilter, filters }) => {
                     <button className="custom-button firaGoBold me-2"  >
                         <span style={{ marginRight: '5px' }}>+</span>ლისტინგის დამატება
                     </button>
-                    <Button style={{backgroundColor: 'white', borderColor: '#F93B1D', color: '#F93B1D' }} 
-                        onMouseEnter={(e) => {
-                            e.target.style.backgroundColor = '#F93B1D';
-                            e.target.style.borderColor = '#F93B1D';
-                            e.target.style.color = 'white'
-                        }}
-                        onMouseLeave={(e) => {
-                            e.target.style.backgroundColor = 'transparent';
-                            e.target.style.borderColor = '#F93B1D';
-                            e.target.style.color = '#F93B1D'
-                        }}>
+                    <button className="custom-button-2">
                         <span style={{ marginRight: '5px' }}>+</span>აგენტის დამატება
-                    </Button>
+                    </button>
                 </Col>
             </Row>
         </Container>
