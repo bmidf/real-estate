@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Card, Col, Row, Image, Button, Modal } from 'react-bootstrap';
+import { Container, Card, Col, Row, Image } from 'react-bootstrap';
 import { IoIosBed } from "react-icons/io";
 import { PiCheckSquareOffsetFill } from "react-icons/pi";
 import { BsSignpostFill } from "react-icons/bs";
@@ -10,15 +10,12 @@ import { FaMapMarkerAlt} from "react-icons/fa";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
 import Carousel from '../components/Carousel';
+import DeleteListingModal from '../components/DeleteListingModal';
 
 const Listing = () => {
     const { id } = useParams();
     const [realEstate, setRealEstate] = useState(null);
     const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -65,24 +62,14 @@ const Listing = () => {
 
     return (
         <Container>
-            <button 
-                className='firaGoBook'
-                style={{
-                    backgroundColor: 'white', 
-                    border: '0px',   
-                    fontSize: '21px', 
-                    cursor: 'pointer', 
-                }}
-                onClick={() => navigate(-1)} 
+            <button className='firaGoBook' onClick={() => navigate(-1)} 
+                style={{ backgroundColor: 'white',  border: '0px',  fontSize: '21px', cursor: 'pointer', }}
             >
                 <IoArrowBackOutline style={{ marginRight: '5px' }} />
             </button>
             <Row style={{ height: '714px', marginTop: '10px'}}>
                 <Col md={7} style={{ position: 'relative' }}>
-                    <Card.Img
-                        variant="top"
-                        src={realEstate.image}
-                        alt={realEstate.address}
+                    <Card.Img variant="top" src={realEstate.image} alt={realEstate.address}
                         style={{ borderRadius: '14px 14px 0 0', height: '90%'}}
                     />
                     <div className='firaGoBook'
@@ -160,63 +147,15 @@ const Listing = () => {
                                 </Col>
                             </Row>
                     </div>
-
                     <div className='firaGoBold'>
-                        <Button  style={{marginTop: '30px', backgroundColor: 'white', borderColor: '#808A93', color: '#808A93'}} 
-                            onMouseEnter={(e) => {
-                                e.target.style.backgroundColor = '#808A93';
-                                e.target.style.borderColor = '#808A93';
-                                e.target.style.color = 'white'
-                            }}
-                            onMouseLeave={(e) => {
-                                e.target.style.backgroundColor = 'transparent';
-                                e.target.style.borderColor = '#808A93';
-                                e.target.style.color = '#808A93'
-                            }}
-                            onClick={handleShow}>
-                            ლისტინგის წაშლა
-                        </Button>
-                        <Modal size='lg' aria-labelledby="contained-modal-title-vcenter" centered show={show} onHide={handleClose} animation={false} style={{backdropFilter: 'blur(5px)'}}> 
-                            <Modal.Body className="text-center d-flex flex-column justify-content-center" style={{ height: '222px', fontSize: '20px', radius: '50px'}}>
-                                <button type="button" onClick={handleClose}
-                                style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    position: 'absolute',
-                                    right: '15px',
-                                    top: '10px',
-                                    cursor: 'pointer',
-                                    fontSize: '47px',
-                                    width: '47px',
-                                    height: '47px',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    color: '#2D3648'
-                                }}
-                                >
-                                &times;
-                                </button>
-                                <Row className="justify-content-center mb-4 firaGoBook">
-                                    გსურთ წაშალოთ ლისტინგი?
-                                </Row>
-                                <Row className="d-flex justify-content-center firaGoBook" style={{fontSize: '16px'}}>
-                                    <button className='custom-button-2' onClick={handleClose} style={{width: '103px',marginRight: '10px', height: '47px' }}>
-                                        გაუქმება
-                                    </button>
-                                    <button className='custom-button' onClick={deleteRealEstate} style={{width: '145px'}}>
-                                        დადასტურება
-                                    </button>
-                                </Row>
-                            </Modal.Body>
-                        </Modal>
+                        <DeleteListingModal show={show} handleClose={() => setShow(false)} handleOpen={() => setShow(true)} deleteRealEstate={deleteRealEstate} />
                     </div>
                 </Col>
                 <Row className="firaGoBold d-flex" style={{fontSize: '32px', padding: '25px'}}>
                     ბინები მსგავს ლოკაციაძე
                 </Row>
                 <Row style={{height: '500px'}}>
-                    <Carousel/>
+                    <Carousel currentRealEstateId={realEstate.id} />
                 </Row>
             </Row>
         </Container>

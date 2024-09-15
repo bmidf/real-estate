@@ -1,4 +1,3 @@
-// Carousel.js
 import React, { useState, useEffect } from 'react';
 import Slider from 'react-slick';
 import CustomCard from './Card';
@@ -6,7 +5,7 @@ import { IoArrowForwardOutline, IoArrowBackOutline } from "react-icons/io5";
 import 'slick-carousel/slick/slick.css'; 
 import 'slick-carousel/slick/slick-theme.css';
 
-const Carousel = () => {
+const Carousel = ({ currentRealEstateId }) => {
     const [relatedRealEstates, setRelatedRealEstates] = useState([]);
 
     useEffect(() => {
@@ -18,29 +17,30 @@ const Carousel = () => {
                     },
                 });
                 const data = await response.json();
-                setRelatedRealEstates(data);
+                const filteredData = data.filter(realEstate => realEstate.id !== currentRealEstateId);
+                setRelatedRealEstates(filteredData);
             } catch (error) {
                 console.error('Error fetching related real estates:', error);
             }
         };
 
         fetchRelatedRealEstates();
-    }, []);
+    }, [currentRealEstateId]); 
 
     const SamplePrevArrow = (props) => {
         const { className, onClick } = props;
         return(
           <div onClick={onClick} className={`arrow ${className}`} >
-            <IoArrowBackOutline class="arrows" style={{color:"black"}}/>
+            <IoArrowBackOutline className="arrows" style={{color:"black"}}/>
           </div>
         )
-        }
+    }
   
-   function SampleNextArrow(props) {
+    const SampleNextArrow = (props) => {
         const { className, onClick } = props;
         return(
           <div onClick={onClick} className={`arrow ${className}`} >
-            <IoArrowForwardOutline class="arrows" style={{color:"black"}}/>
+            <IoArrowForwardOutline className="arrows" style={{color:"black"}}/>
           </div>
         )
     }
@@ -78,7 +78,7 @@ const Carousel = () => {
         <Slider {...settings}>
             {relatedRealEstates.map((realEstate, index) => (
                 <div key={index}>
-                    <CustomCard realEstate={realEstate}/>
+                    <CustomCard realEstate={realEstate} />
                 </div>
             ))}
         </Slider>
