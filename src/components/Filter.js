@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, DropdownButton, Button } from 'react-bootstrap';
+import { Container, Row, Col, DropdownButton} from 'react-bootstrap';
 import RegionFilter from './filters/RegionFilter';
 import PriceFilter from './filters/PriceFilter';
-import AreaFilter from './filters/AreaFilter';
+import AreaFilter from './filters/AreaFilter'
 import BedroomCount from './filters/BedroomCount';
 
 const Filter = ({ onFilter, filters }) => {

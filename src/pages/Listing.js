@@ -9,7 +9,7 @@ import { LuPhoneCall } from "react-icons/lu";
 import { FaMapMarkerAlt} from "react-icons/fa";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
-
+import Carousel from '../components/Carousel';
 
 const Listing = () => {
     const { id } = useParams();
@@ -176,8 +176,8 @@ const Listing = () => {
                             onClick={handleShow}>
                             ლისტინგის წაშლა
                         </Button>
-                        <Modal size='lg' aria-labelledby="contained-modal-title-vcenter" centered show={show} onHide={handleClose} animation={false}>
-                            <Modal.Body className="text-center d-flex flex-column justify-content-center" style={{ height: '222px', fontSize: '20px'}}>
+                        <Modal size='lg' aria-labelledby="contained-modal-title-vcenter" centered show={show} onHide={handleClose} animation={false} style={{backdropFilter: 'blur(5px)'}}> 
+                            <Modal.Body className="text-center d-flex flex-column justify-content-center" style={{ height: '222px', fontSize: '20px', radius: '50px'}}>
                                 <button type="button" onClick={handleClose}
                                 style={{
                                     background: 'none',
@@ -212,6 +212,12 @@ const Listing = () => {
                         </Modal>
                     </div>
                 </Col>
+                <Row className="firaGoBold d-flex" style={{fontSize: '32px', padding: '25px'}}>
+                    ბინები მსგავს ლოკაციაძე
+                </Row>
+                <Row style={{height: '500px'}}>
+                    <Carousel/>
+                </Row>
             </Row>
         </Container>
     );
