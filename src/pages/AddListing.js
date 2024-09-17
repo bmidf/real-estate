@@ -1,0 +1,430 @@
+import React, { useState, useEffect } from 'react';
+import { Form, Row, Col, Container } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { CiCirclePlus } from 'react-icons/ci';
+import { IoMdCheckmark } from "react-icons/io";
+import TrashButton from '../assets/icons/TrashButton.svg';
+
+const AddListing = () => {
+    const navigate = useNavigate();
+    const [imagePreview, setImagePreview] = useState(null);
+    const [regions, setRegions] = useState([]);
+    const [cities, setCities] = useState([]);
+    const [filteredCities, setFilteredCities] = useState([]);
+    const [agents, setAgents] = useState([]);
+    const [realEstate, setRealEstate] = useState({
+        price: '',
+        zip_code: '',
+        description: '',
+        area: '',
+        city_id: '',
+        address: '',
+        bedrooms: '',
+        is_rental: '0',
+        image: null,
+        agent_id: '',
+        region_id: '', 
+    });
+
+    const [errors, setErrors] = useState({
+        address: '',
+        description: '',
+    });
+
+    useEffect(() => {
+        fetch('https://api.real-estate-manager.redberryinternship.ge/api/regions')
+            .then(response => response.json())
+            .then(data => setRegions(data))
+            .catch(error => console.error('Error fetching regions:', error));
+    }, []);
+
+    useEffect(() => {
+        fetch('https://api.real-estate-manager.redberryinternship.ge/api/cities')
+            .then(response => response.json())
+            .then(data => {
+                setCities(data);
+                setFilteredCities(data);
+            })
+            .catch(error => console.error('Error fetching cities:', error));
+    }, []);
+    
+    useEffect(() => {
+        fetch('https://api.real-estate-manager.redberryinternship.ge/api/agents', {
+            headers: {
+                'Authorization': 'Bearer 9cfc6240-ffc9-44ab-b4ed-b792a03c592f',
+            },
+        })
+        .then(response => response.json())
+        .then(data => setAgents(data))
+        .catch(error => console.error('Error fetching agents:', error));
+    }, []);
+    
+    useEffect(() => {
+        const storedData = JSON.parse(localStorage.getItem('realEstate')) || {};
+        setRealEstate(prevState => ({ ...prevState, ...storedData }));
+    
+        if (storedData.region_id) {
+            const selectedRegionId = parseInt(storedData.region_id, 10);
+            const filtered = cities.filter(city => city.region_id === selectedRegionId);
+            setFilteredCities(filtered);
+            setRealEstate(prevState => ({
+                ...prevState,
+                city_id: filtered.length > 0 ? filtered[0].id : '',
+            }));
+        }
+    }, [cities]);
+    
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setRealEstate(prevState => {
+            const newState = { ...prevState, [name]: value };
+            localStorage.setItem('realEstate', JSON.stringify(newState));
+            return newState;
+        });
+    
+        if (name === 'address') {
+            if (value.length < 2 && value.length > 0) {
+                setErrors(prevErrors => ({ ...prevErrors, address: 'ჩაწერეთ ვალიდური მონაცემები' }));
+            } else {
+                setErrors(prevErrors => ({ ...prevErrors, address: '' }));
+            }
+        }
+        if (name === 'description') {
+            if (value.split(' ').length < 5 && value.length > 0) {
+                setErrors(prevErrors => ({ ...prevErrors, description: 'ჩაწერეთ ვალიდური მონაცემები' }));
+            } else {
+                setErrors(prevErrors => ({ ...prevErrors, description: '' }));
+            }
+        }
+        
+        if (name === 'region_id') {
+            const selectedRegionId = parseInt(value, 10);
+            const filtered = cities.filter(city => city.region_id === selectedRegionId);
+            setFilteredCities(filtered);
+            setRealEstate(prevState => ({
+                ...prevState,
+                city_id: filtered.length > 0 ? filtered[0].id : '',
+            }));
+        }
+    };
+    
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        setRealEstate(prevState => ({
+            ...prevState,
+            image: file,
+        }));
+    
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('price', realEstate.price);
+        formData.append('zip_code', realEstate.zip_code);
+        formData.append('description', realEstate.description);
+        formData.append('area', realEstate.area);
+        formData.append('city_id', realEstate.city_id);
+        formData.append('address', realEstate.address);
+        formData.append('bedrooms', realEstate.bedrooms);
+        formData.append('is_rental', realEstate.is_rental);
+        formData.append('image', realEstate.image);
+        formData.append('agent_id', realEstate.agent_id);
+        formData.append('region_id', realEstate.region_id);
+    
+        try {
+            const response = await fetch('https://api.real-estate-manager.redberryinternship.ge/api/real-estates', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer 9cfc6240-ffc9-44ab-b4ed-b792a03c592f',
+                },
+                body: formData,
+            });
+    
+            if (response.ok) {
+                const result = await response.json();
+                console.log(result);
+                localStorage.removeItem('realEstate');
+                navigate('/');
+            } else {
+                const errorData = await response.json();
+                console.error('Error creating real estate listing:', errorData);
+            }
+        } catch (error) {
+            console.error('Error submitting form:', error);
+        }
+    };
+    
+    return (
+        <Container style={{ maxWidth: '600px', fontSize: '14px'}} className="input-decoration firaGoBold">
+            <Row className="align-items-center" style={{textAlign: "center", height: '120px'}} >
+                <span style={{fontSize: '38px'}}>ლისტინგის დამატება</span>
+            </Row>
+            <Form onSubmit={handleSubmit}>
+                <Row className="mb-3">
+                    <Form.Label style={{fontSize: '16px'}}>გარიგების ტიპი</Form.Label>
+                    <Form.Group className='d-flex firaGoBook'>
+                        <Form.Check 
+                            type="radio" 
+                            label="იყიდება" 
+                            name="is_rental" 
+                            value="0" 
+                            checked={realEstate.is_rental === '0'}
+                            onChange={handleChange}
+                            style={{width: '200px'}}
+                        />
+                        <Form.Check 
+                            type="radio" 
+                            label="ქირავდება" 
+                            name="is_rental" 
+                            value="1"
+                            checked={realEstate.is_rental === '1'}
+                            onChange={handleChange}
+                        />
+                    </Form.Group>
+                </Row>
+                <Row className="mb-3">
+                    <Form.Label style={{fontSize: '16px',  marginTop: '50px'}}>მდებარეობა</Form.Label>
+                    <Col>
+                        <Form.Group controlId="address">
+                            <Form.Label>მისამართი *</Form.Label>
+                            <Form.Control 
+                                className="firaGoBook"
+                                type="text" 
+                                name="address" 
+                                value={realEstate.address} 
+                                onChange={handleChange} 
+                                minLength="2"
+                                required
+                                style={{
+                                    borderColor: realEstate.address.length > 0 ? (errors.address ? 'red' : 'grey') : 'grey',
+                                    borderWidth: '1px'
+                                }}
+                            />
+                            <Form.Text className="firaGoBook" style={{ color: realEstate.address.length === 0 ? '#021526' : errors.address ? 'red' : '#45A849' }}>
+                                <IoMdCheckmark style={{fontSize: '17px'}}/>{errors.address || (realEstate.address.length === 0 ? 'მინიმუმ ორი სიმბოლო' : 'მინიმუმ ორი სიმბოლო')}
+                            </Form.Text>
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group controlId="zip_code">
+                            <Form.Label>საფოსტო ინდექსი *</Form.Label>
+                            <Form.Control 
+                                className="firaGoBook"
+                                type="number" 
+                                name="zip_code" 
+                                value={realEstate.zip_code} 
+                                onChange={handleChange} 
+                                required
+                                style={{
+                                    borderColor: 'grey',
+                                    borderWidth: '1px'
+                                }}
+                            />
+                            <Form.Text className="firaGoBook" style={{ color: realEstate.zip_code.length === 0 ? '#021526' : '#45A849' }}>
+                                <IoMdCheckmark style={{fontSize: '17px'}}/>{realEstate.zip_code.length === 0 ? 'მხოლოდ რიცხვები' : 'მხოლოდ რიცხვები'}
+                            </Form.Text>
+                        </Form.Group>
+                    </Col>
+                </Row>
+                <Row className="mb-3">
+                    <Col>
+                        <Form.Group controlId="region_id">
+                            <Form.Label>რეგიონი</Form.Label>
+                                <Form.Control className="firaGoBook" as="select" name="region_id" onChange={handleChange} required>
+                                    <option value="">აირჩიეთ რეგიონი</option>
+                                    {regions.map((region) => (
+                                        <option key={region.id} value={region.id}>{region.name}</option>
+                                    ))}
+                                </Form.Control>
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        {realEstate.region_id && (
+                            <Form.Group controlId="city_id">
+                                <Form.Label>ქალაქი</Form.Label>
+                                <Form.Control className="firaGoBook" as="select" name="city_id" onChange={handleChange} required>
+                                    <option value="">აირჩიეთ ქალაქი</option>
+                                    {filteredCities.map((city) => (
+                                        <option key={city.id} value={city.id}>{city.name}</option>
+                                    ))}
+                                </Form.Control>
+                            </Form.Group>
+                        )}
+                    </Col>
+                </Row>
+                <Form.Label style={{fontSize: '16px', marginTop: '50px'}}>ბინის დეტალები</Form.Label>
+                <Row className="mb-3">
+                    <Col style={{height: '83px'}}>
+                        <Form.Group controlId="price">
+                            <Form.Label>ფასი *</Form.Label>
+                            <Form.Control 
+                                className="firaGoBook"
+                                type="number" 
+                                name="price" 
+                                value={realEstate.price} 
+                                onChange={handleChange} 
+                                required
+                                style={{
+                                    borderColor: 'grey',
+                                    borderWidth: '1px'
+                                }}
+                            />
+                            <Form.Text className="firaGoBook" style={{color: realEstate.price.length === 0 ? '#021526' : '#45A849' }}>
+                                <IoMdCheckmark style={{fontSize: '17px'}}/>{realEstate.price.length === 0 ? 'მხოლოდ რიცხვები' : 'მხოლოდ რიცხვები'}
+                            </Form.Text>
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group controlId="area">
+                            <Form.Label>ფართობი *</Form.Label>
+                            <Form.Control 
+                                className="firaGoBook"
+                                type="number" 
+                                name="area" 
+                                value={realEstate.area} 
+                                onChange={handleChange} 
+                                required
+                                style={{
+                                    borderColor: 'grey',
+                                    borderWidth: '1px'
+                                }}
+                            />
+                            <Form.Text className="firaGoBook" style={{ color: realEstate.area.length === 0 ? '#021526' : '#45A849' }}>
+                                <IoMdCheckmark style={{fontSize: '17px'}}/>{realEstate.area.length === 0 ? 'მხოლოდ რიცხვები' : 'მხოლოდ რიცხვები'}
+                            </Form.Text>
+                        </Form.Group>
+                    </Col>
+                </Row>
+                <Row className="mb-3">
+                    <Col>
+                        <Form.Group controlId="bedrooms">
+                            <Form.Label>საძინებლების რაოდენობა *</Form.Label>
+                            <Form.Control 
+                                className="firaGoBook"
+                                type="number" 
+                                name="bedrooms" 
+                                value={realEstate.bedrooms} 
+                                onChange={handleChange} 
+                                required
+                                style={{
+                                    borderColor: 'grey',
+                                    borderWidth: '1px'
+                                }}
+                            />
+                            <Form.Text className="firaGoBook" style={{ color: realEstate.bedrooms.length === 0 ? '#021526' : '#45A849' }}>
+                                <IoMdCheckmark style={{fontSize: '17px'}}/>{realEstate.bedrooms.length === 0 ? 'მხოლოდ რიცხვები' : 'მხოლოდ რიცხვები'}
+                            </Form.Text>
+                        </Form.Group>
+                    </Col>
+                </Row>
+                <Row className="mb-3">
+                    <Col>
+                        <Form.Group controlId="description">
+                            <Form.Label>აღწერა *</Form.Label>
+                            <Form.Control 
+                                className="firaGoBook"
+                                as="textarea" 
+                                rows={5} 
+                                name="description" 
+                                value={realEstate.description} 
+                                onChange={handleChange} 
+                                required 
+                                minLength="5"
+                                style={{
+                                    borderColor: realEstate.description.length > 0 ? (errors.description ? 'red' : 'grey') : 'grey',
+                                    borderWidth: '1px'
+                                }}
+                            />
+                            <Form.Text className="firaGoBook" style={{ color: errors.description ? 'red' : realEstate.description.length > 0 ? '#45A849' : '#021526' }}>
+                                <IoMdCheckmark style={{fontSize: '17px'}}/>{errors.description || (realEstate.description.length === 0 ? 'მინიმუმ ხუთი სიტყვა' : 'მინიმუმ ხუთი სიტყვა')}
+                            </Form.Text>
+                        </Form.Group>
+                    </Col>
+                </Row>
+                <Row className="mb-3">
+                        <Col>
+                        <Form.Group controlId="image">
+                            <Form.Label>ატვირთეთ ფოტო *</Form.Label>
+                            <div
+                                style={{
+                                    border: '2px dashed grey',
+                                    borderRadius: '8px',
+                                    height: '120px',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    cursor: 'pointer',
+                                    position: 'relative',
+                                    overflow: 'hidden',
+                                }}
+                                onClick={() => document.getElementById('imageInput').click()}
+                            >
+                                {imagePreview ? (
+                                    <div style={{ position: 'relative'}}>
+                                        <img src={imagePreview} alt="Preview"
+                                            style={{
+                                                maxWidth: '84px',
+                                                objectFit: 'cover',
+                                                borderRadius: '8px',
+                                            }}
+                                        />
+                                        <img src={TrashButton} alt="trash"
+                                            style={{
+                                                position: 'absolute',
+                                                bottom: '-7px',
+                                                right: '-7px',
+                                                width: '20px',
+                                                height: '20px',
+                                            }}
+                                        />
+                                    </div>
+                                ) : (
+                                    <CiCirclePlus style={{ fontSize: '34px', color: 'grey' }} />
+                                )}
+                                <Form.Control type="file" id="imageInput" onChange={handleImageChange}
+                                    accept="image/*" required style={{ display: 'none' }}
+                                />
+                            </div>
+                        </Form.Group>
+                    </Col>
+                </Row>
+
+                <Form.Label style={{fontSize: '16px', marginTop: '50px'}}>აგენტი</Form.Label>
+                <Row className="mb-3">
+                    <Col>
+                        <Form.Group controlId="agent_id">
+                            <Form.Label>აგენტის არჩევა</Form.Label>
+                            <Form.Control className="firaGoBook" as="select" name="agent_id" onChange={handleChange} required>
+                                <option value="">აირჩიე</option>
+                                {agents.map((agent) => (
+                                    <option key={agent.id} value={agent.id}>{agent.name} {agent.surname}</option>
+                                ))}
+                            </Form.Control>
+                        </Form.Group>
+                    </Col>
+                </Row>
+                <Row className='d-flex justify-content-end'>
+                    <Col className='d-flex justify-content-end'>
+                        <button className="custom-button-2" style={{width: '130px', marginRight: '10px'}}>
+                            გაუქმება
+                        </button>
+                        <button className="custom-button me-2" type="submit">
+                            დაამატე ლისტინგი
+                        </button>
+                    </Col>
+                </Row>
+                <Row style={{height: '25px'}}></Row>
+            </Form>
+        </Container>
+    );
+};
+
+export default AddListing;

@@ -4,12 +4,14 @@ import RegionFilter from './filters/RegionFilter';
 import PriceFilter from './filters/PriceFilter';
 import AreaFilter from './filters/AreaFilter'
 import BedroomCount from './filters/BedroomCount';
+import { useNavigate } from 'react-router-dom';
 
 const Filter = ({ onFilter, filters }) => {
     const [selectedRegions, setSelectedRegions] = useState(filters.regions);
     const [priceRange, setPriceRange] = useState(filters.price);
     const [areaRange, setAreaRange] = useState(filters.area);
     const [bedroomCount, setBedroomCount] = useState(filters.bedrooms || '');
+    const navigate = useNavigate();
 
     useEffect(() => {
         setSelectedRegions(filters.regions);
@@ -43,6 +45,10 @@ const Filter = ({ onFilter, filters }) => {
         onFilter(filters);
     };
 
+    const handleAddListing = () => {
+        navigate(`/add-listing`);
+    };
+
     return (
         <Container>
             <Row className="d-flex justify-content-between firaGoBold" style={{ marginTop: '10px' }}>
@@ -61,7 +67,7 @@ const Filter = ({ onFilter, filters }) => {
                     </DropdownButton>
                 </Col>
                 <Col className="d-flex justify-content-end">
-                    <button className="custom-button firaGoBold me-2"  >
+                    <button className="custom-button firaGoBold me-2" onClick={handleAddListing} >
                         <span style={{ marginRight: '5px' }}>+</span>ლისტინგის დამატება
                     </button>
                     <button className="custom-button-2">

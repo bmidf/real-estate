@@ -84,6 +84,11 @@
   cursor: pointer;
 }
 
+/*Input Decoration*/
+.input-decoration .form-control:focus{
+  box-shadow: none;
+}
+
 /*Fonts*/
 @font-face {
   font-family: 'FiraGO-Bold';
