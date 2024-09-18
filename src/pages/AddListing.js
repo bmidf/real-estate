@@ -164,7 +164,7 @@ const AddListing = () => {
     
     const handleCancel = () => {
         localStorage.removeItem('realEstate');
-        navigate('/real-estate');
+        navigate('/');
     }
     
 
