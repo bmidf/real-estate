@@ -1,11 +1,9 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import Listing from './pages/Listing';
-import AddListing from './pages/AddListing';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
-import Container from 'react-bootstrap/Container';
-import './App.css';
+import Home from './components/Home';
+import Listing from './components/Listing';
+import AddListing from './components/AddListing';
+import { Container } from 'react-bootstrap';
 
 function App() {
   return (
@@ -15,7 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/real-estate/:id" element={<Listing />} />
-          <Route path="/add-listing" element={<AddListing/>}/>
+          <Route path="/add-listing" element={<AddListing />} />
         </Routes>
       </Container>
     </Router>
