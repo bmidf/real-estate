@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <Navbar className="bg-white FiraGo" style={{ height: '100px', backgroundColor: 'white' }}>
       <Container>
-        <Navbar.Brand href="/" style={{color: 'red', fontWeight: 'bold'}}>REDBERRY</Navbar.Brand>
+        <Navbar.Brand href="/real-estate" style={{color: 'red', fontWeight: 'bold'}}>REDBERRY</Navbar.Brand>
       </Container>
     </Navbar>
   );

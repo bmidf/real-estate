@@ -1,4 +1,4 @@
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter  as Router, Switch, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Home from './components/Home';
 import Listing from './components/Listing';
@@ -7,16 +7,16 @@ import { Container } from 'react-bootstrap';
 
 function App() {
   return (
-    <Router>
-      <Container className="App">
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/real-estate/:id" element={<Listing />} />
-          <Route path="/add-listing" element={<AddListing />} />
-        </Routes>
-      </Container>
-    </Router>
+    <Container className="App">
+      <Router>
+          <Header />
+          <Switch>
+            <Route path="/real-estate"><Home /></Route>
+            <Route path="/real-estate/:id"><Listing /></Route>
+            <Route path="/add-listing"><AddListing /></Route>
+          </Switch>
+      </Router>
+    </Container>
   );
 }
 
