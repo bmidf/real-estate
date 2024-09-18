@@ -5,6 +5,7 @@ import PriceFilter from './filters/PriceFilter';
 import AreaFilter from './filters/AreaFilter'
 import BedroomCount from './filters/BedroomCount';
 import { useNavigate } from 'react-router-dom';
+import AddAgent from './AddAgent';
 
 const Filter = ({ onFilter, filters }) => {
     const [selectedRegions, setSelectedRegions] = useState(filters.regions);
@@ -48,6 +49,10 @@ const Filter = ({ onFilter, filters }) => {
     const handleAddListing = () => {
         navigate(`/add-listing`);
     };
+    const [show, setShow] = useState(false);
+
+    const handleOpen = () => setShow(true);
+    const handleClose = () => setShow(false);
 
     return (
         <Container>
@@ -70,9 +75,7 @@ const Filter = ({ onFilter, filters }) => {
                     <button className="custom-button firaGoBold me-2" onClick={handleAddListing} >
                         <span style={{ marginRight: '5px' }}>+</span>ლისტინგის დამატება
                     </button>
-                    <button className="custom-button-2">
-                        <span style={{ marginRight: '5px' }}>+</span>აგენტის დამატება
-                    </button>
+                    <AddAgent show={show} handleClose={handleClose} handleOpen={handleOpen} />
                 </Col>
             </Row>
         </Container>

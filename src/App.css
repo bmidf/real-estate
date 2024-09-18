@@ -6,7 +6,7 @@
   color: white;
   cursor: pointer;
   padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: 10px;
   transition: background-color 0.3s ease;
 }
 
@@ -25,7 +25,7 @@
   background-color: white;
   border: 1px solid #F93B1D;
   color: #F93B1D;
-  border-radius: 5px;
+  border-radius: 10px;
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -87,6 +87,12 @@
 /*Input Decoration*/
 .input-decoration .form-control:focus{
   box-shadow: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /*Fonts*/

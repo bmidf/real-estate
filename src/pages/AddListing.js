@@ -162,8 +162,14 @@ const AddListing = () => {
         }
     };
     
+    const handleCancel = () => {
+        localStorage.removeItem('realEstate');
+        navigate('/');
+    }
+    
+
     return (
-        <Container style={{ maxWidth: '600px', fontSize: '14px'}} className="input-decoration firaGoBold">
+        <Container style={{ maxWidth: '812px', fontSize: '14px'}} className="input-decoration firaGoBold">
             <Row className="align-items-center" style={{textAlign: "center", height: '120px'}} >
                 <span style={{fontSize: '38px'}}>ლისტინგის დამატება</span>
             </Row>
@@ -209,7 +215,7 @@ const AddListing = () => {
                                 }}
                             />
                             <Form.Text className="firaGoBook" style={{ color: realEstate.address.length === 0 ? '#021526' : errors.address ? 'red' : '#45A849' }}>
-                                <IoMdCheckmark style={{fontSize: '17px'}}/>{errors.address || (realEstate.address.length === 0 ? 'მინიმუმ ორი სიმბოლო' : 'მინიმუმ ორი სიმბოლო')}
+                                <IoMdCheckmark/>{errors.address || 'მინიმუმ ორი სიმბოლო' }
                             </Form.Text>
                         </Form.Group>
                     </Col>
@@ -229,7 +235,7 @@ const AddListing = () => {
                                 }}
                             />
                             <Form.Text className="firaGoBook" style={{ color: realEstate.zip_code.length === 0 ? '#021526' : '#45A849' }}>
-                                <IoMdCheckmark style={{fontSize: '17px'}}/>{realEstate.zip_code.length === 0 ? 'მხოლოდ რიცხვები' : 'მხოლოდ რიცხვები'}
+                                <IoMdCheckmark/>{realEstate.area.length === 0 ? 'მხოლოდ რიცხვები' : 'მხოლოდ რიცხვები'}
                             </Form.Text>
                         </Form.Group>
                     </Col>
@@ -278,7 +284,7 @@ const AddListing = () => {
                                 }}
                             />
                             <Form.Text className="firaGoBook" style={{color: realEstate.price.length === 0 ? '#021526' : '#45A849' }}>
-                                <IoMdCheckmark style={{fontSize: '17px'}}/>{realEstate.price.length === 0 ? 'მხოლოდ რიცხვები' : 'მხოლოდ რიცხვები'}
+                                <IoMdCheckmark/>{realEstate.area.length === 0 ? 'მხოლოდ რიცხვები' : 'მხოლოდ რიცხვები'}
                             </Form.Text>
                         </Form.Group>
                     </Col>
@@ -298,7 +304,7 @@ const AddListing = () => {
                                 }}
                             />
                             <Form.Text className="firaGoBook" style={{ color: realEstate.area.length === 0 ? '#021526' : '#45A849' }}>
-                                <IoMdCheckmark style={{fontSize: '17px'}}/>{realEstate.area.length === 0 ? 'მხოლოდ რიცხვები' : 'მხოლოდ რიცხვები'}
+                                <IoMdCheckmark/>{realEstate.area.length === 0 ? 'მხოლოდ რიცხვები' : 'მხოლოდ რიცხვები'}
                             </Form.Text>
                         </Form.Group>
                     </Col>
@@ -320,7 +326,7 @@ const AddListing = () => {
                                 }}
                             />
                             <Form.Text className="firaGoBook" style={{ color: realEstate.bedrooms.length === 0 ? '#021526' : '#45A849' }}>
-                                <IoMdCheckmark style={{fontSize: '17px'}}/>{realEstate.bedrooms.length === 0 ? 'მხოლოდ რიცხვები' : 'მხოლოდ რიცხვები'}
+                                <IoMdCheckmark/>{realEstate.area.length === 0 ? 'მხოლოდ რიცხვები' : 'მხოლოდ რიცხვები'}
                             </Form.Text>
                         </Form.Group>
                     </Col>
@@ -344,7 +350,7 @@ const AddListing = () => {
                                 }}
                             />
                             <Form.Text className="firaGoBook" style={{ color: errors.description ? 'red' : realEstate.description.length > 0 ? '#45A849' : '#021526' }}>
-                                <IoMdCheckmark style={{fontSize: '17px'}}/>{errors.description || (realEstate.description.length === 0 ? 'მინიმუმ ხუთი სიტყვა' : 'მინიმუმ ხუთი სიტყვა')}
+                                <IoMdCheckmark/>{errors.description ||'მინიმუმ ხუთი სიტყვა'}
                             </Form.Text>
                         </Form.Group>
                     </Col>
@@ -401,9 +407,9 @@ const AddListing = () => {
                 <Row className="mb-3">
                     <Col>
                         <Form.Group controlId="agent_id">
-                            <Form.Label>აგენტის არჩევა</Form.Label>
+                            <Form.Label>აირჩიე</Form.Label>
                             <Form.Control className="firaGoBook" as="select" name="agent_id" onChange={handleChange} required>
-                                <option value="">აირჩიე</option>
+                                <option value="">აირჩიეთ აგენტი</option>
                                 {agents.map((agent) => (
                                     <option key={agent.id} value={agent.id}>{agent.name} {agent.surname}</option>
                                 ))}
@@ -411,12 +417,12 @@ const AddListing = () => {
                         </Form.Group>
                     </Col>
                 </Row>
-                <Row className='d-flex justify-content-end'>
-                    <Col className='d-flex justify-content-end'>
-                        <button className="custom-button-2" style={{width: '130px', marginRight: '10px'}}>
+                <Row className='d-flex justify-content-end firaGoBook'>
+                    <Col className='d-flex justify-content-end' style={{height: '47px', marginTop: '20px'}}>
+                        <button onClick={handleCancel} className="custom-button-2" style={{width: '103px', marginRight: '10px'}}>
                             გაუქმება
                         </button>
-                        <button className="custom-button me-2" type="submit">
+                        <button className="custom-button me-2" type="submit" style={{width: '187px'}}>
                             დაამატე ლისტინგი
                         </button>
                     </Col>
