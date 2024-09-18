@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/real-estate/static/css/main.0bc3cdf0.css",
+    "main.js": "/real-estate/static/js/main.45a6a0cc.js",
+    "static/media/FiraGO-Bold.ttf": "/real-estate/static/media/FiraGO-Bold.6873f2abdb06d26ed2be.ttf",
+    "static/media/FiraGO-Medium.ttf": "/real-estate/static/media/FiraGO-Medium.c20fbd9f06e6da20dccf.ttf",
+    "static/media/FiraGO-Book.ttf": "/real-estate/static/media/FiraGO-Book.f76cd3d7804d686061e8.ttf",
+    "static/media/FiraGO-Light.ttf": "/real-estate/static/media/FiraGO-Light.90f3ecdda3b1b12c40f2.ttf",
+    "static/media/slick.svg": "/real-estate/static/media/slick.2630a3e3eab21c607e21.svg",
+    "static/media/slick.eot": "/real-estate/static/media/slick.a4e97f5a2a64f0ab1323.eot",
+    "static/media/slick.ttf": "/real-estate/static/media/slick.c94f7671dcc99dce43e2.ttf",
+    "static/media/slick.woff": "/real-estate/static/media/slick.295183786cd8a1389865.woff",
+    "static/media/TrashButton.svg": "/real-estate/static/media/TrashButton.e9c0516f32edeb14a717d2ab1301d247.svg",
+    "index.html": "/real-estate/index.html",
+    "main.0bc3cdf0.css.map": "/real-estate/static/css/main.0bc3cdf0.css.map",
+    "main.45a6a0cc.js.map": "/real-estate/static/js/main.45a6a0cc.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0bc3cdf0.css",
+    "static/js/main.45a6a0cc.js"
+  ]
+}
