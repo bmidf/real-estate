@@ -39,22 +39,22 @@ const RegionFilter = ({ onRegionFilter }) => {
 
     return (
         <Container style={{ padding: '20px', width: '731px' }}>
-                <Row>
-                    <label style={{ marginBottom: '20px' }}>რეგიონის მიხედვით</label>
-                    {regions.map((region) => (
-                        <Col className='firaGoBook' key={region.id} xs={4}>
-                            <Form.Check
-                                type="checkbox"
-                                id={`region-${region.id}`}
-                                value={region.id}
-                                checked={selectedRegions.includes(region.id)}
-                                onChange={() => handleRegionSelect(region.id)}
-                                label={region.name}
-                                className="custom-checkbox" 
-                            />
-                        </Col>
-                    ))}
-                </Row>
+            <Row>
+                <label style={{ marginBottom: '20px' }}>რეგიონის მიხედვით</label>
+                {regions.map((region) => (
+                    <Col className='firaGoBook' key={region.id} xs={4}>
+                        <Form.Check
+                            type="checkbox"
+                            id={`region-${region.id}`}
+                            value={region.id}
+                            checked={selectedRegions.includes(region.id)}
+                            onChange={() => handleRegionSelect(region.id)}
+                            label={region.name}
+                            className="custom-checkbox" 
+                        />
+                    </Col>
+                ))}
+            </Row>
             <Row className="justify-content-end me-2">
                 <button className="custom-button firaGoBold" style={{ marginTop: '20px', width: '85px'}} onClick={handleFilterApply}>
                     არჩევა

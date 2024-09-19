@@ -12,70 +12,93 @@ const AddAgent = ({ show, handleOpen, handleClose }) => {
     const [formData, setFormData] = useState({ name: '', surname: '', email: '', phone: '', avatar: '' });
     const [errors, setErrors] = useState({});
     const [imagePreview, setImagePreview] = useState(null);
+    const [imageSizeError, setImageSizeError] = useState('');
 
     useEffect(() => {
         const storedData = JSON.parse(localStorage.getItem('agentData')) || {};
         setFormData(prevState => ({ ...prevState, ...storedData }));
-
-        if (storedData.avatar) {
-            setImagePreview(storedData.avatar);
-        }
+        if (storedData.avatar) setImagePreview(storedData.avatar);
     }, []);
 
     const validateForm = () => {
         const newErrors = {};
+
         if (formData.name.length < 2) newErrors.name = 'მინიმუმ ორი სიმბოლო';
         if (formData.surname.length < 2) newErrors.surname = 'მინიმუმ ორი სიმბოლო';
         if (!formData.email.endsWith('@redberry.ge')) newErrors.email = 'ელ.ფოსტა უნდა მთავრდებოდეს @redberry.ge-ით';
+        if (!!/^\d+$/.test(formData.phone)) newErrors.phone = 'მხოლოდ რიცხვები';
         if (!/^[5]\d{8}$/.test(formData.phone)) newErrors.phone = 'ნომრის ფორმატი: 5XXXXXXXXX';
+
+        if (imageSizeError) newErrors.avatar = imageSizeError;
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+    const handleChange = ({ target: { name, value } }) => {
         setFormData(prevState => {
-            const newState = { ...prevState, [name]: value };
-            localStorage.setItem('agentData', JSON.stringify(newState));
-            return newState;
+            const updatedData = { ...prevState, [name]: value };
+            localStorage.setItem('agentData', JSON.stringify(updatedData));
+            return updatedData;
         });
+        
+        setErrors(prevErrors => {
+            const newErrors = { ...prevErrors };
+            if (name === 'name' && value.length < 2) newErrors.name = 'მინიმუმ ორი სიმბოლო';
+            else if (name === 'name') delete newErrors.name;
+            if (name === 'surname' && value.length < 2) newErrors.surname = 'მინიმუმ ორი სიმბოლო';
+            else if (name === 'surname') delete newErrors.surname;
+            if (name === 'email' && !value.endsWith('@redberry.ge')) newErrors.email = 'გამოიყენეთ @redberry.ge ფოსტა';
+            else if (name === 'email') delete newErrors.email;
+            if (name === 'phone' && !/^\d+$/.test(value)) newErrors.phone = 'მხოლოდ რიცხვები';
+            else if (name === 'phone' && !/^[5]\d{8}$/.test(value)) newErrors.phone = 'ნომრის ფორმატი: 5XXXXXXXXX';
+            else if (name === 'phone') delete newErrors.phone;
 
-        const newErrors = { ...errors };
-        if (name === 'name' && value.length < 2) newErrors.name = 'მინიმუმ ორი სიმბოლო';
-        else if (name === 'name') delete newErrors.name;
+            if (name === 'avatar') {
+                if (imageSizeError) newErrors.avatar = imageSizeError;
+                else delete newErrors.avatar;
+            }
 
-        if (name === 'surname' && value.length < 2) newErrors.surname = 'მინიმუმ ორი სიმბოლო';
-        else if (name === 'surname') delete newErrors.surname;
-
-        if (name === 'email' && !value.endsWith('@redberry.ge')) newErrors.email = 'გამოიყენეთ @redberry.ge ფოსტა';
-        else if (name === 'email') delete newErrors.email;
-
-        if (name === 'phone' && !/^\d+$/.test(value)) newErrors.phone = 'მხოლოდ რიცხვები';
-        else if (name === 'phone' && !/^[5]\d{8}$/.test(value)) newErrors.phone = 'ნომრის ფორმატი: 5XXXXXXXXX';
-        else if (name === 'phone') delete newErrors.phone;
-
-        setErrors(newErrors);
+            return newErrors;
+        });
     };
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
+    const handleImageChange = ({ target: { files } }) => {
+        const file = files[0];
         if (file) {
+            if (file.size > 1 * 1024 * 1024) {
+                setImageSizeError('ფაილის ზომა არ უნდა აღემატებოდეს 1 მბ');
+                setErrors(prevErrors => ({ ...prevErrors, avatar: 'ფაილის ზომა არ უნდა აღემატებოდეს 1 მბ' }));
+                return;
+            }
+            setImageSizeError('');
+            setErrors(prevErrors => {
+                const newErrors = { ...prevErrors };
+                if (newErrors.avatar) delete newErrors.avatar;
+                return newErrors;
+            });
+
             const reader = new FileReader();
             reader.onloadend = () => {
                 const base64String = reader.result;
-                setFormData(prevState => ({
-                    ...prevState,
-                    avatar: base64String
-                }));
-                localStorage.setItem('agentData', JSON.stringify({
-                    ...formData,
-                    avatar: base64String
-                }));
+                setFormData(prevState => ({ ...prevState, avatar: base64String }));
+                localStorage.setItem('agentData', JSON.stringify({ ...formData, avatar: base64String }));
                 setImagePreview(base64String);
             };
             reader.readAsDataURL(file);
         }
+    };
+
+    const handleImageRemove = () => {
+        setFormData(prevState => ({ ...prevState, avatar: '' }));
+        localStorage.setItem('agentData', JSON.stringify({ ...formData, avatar: '' }));
+        setImagePreview(null);
+        setImageSizeError('');
+        setErrors(prevErrors => {
+            const newErrors = { ...prevErrors };
+            if (newErrors.avatar) delete newErrors.avatar;
+            return newErrors;
+        });
     };
 
     const handleSubmit = async (e) => {
@@ -94,30 +117,21 @@ const AddAgent = ({ show, handleOpen, handleClose }) => {
 
             const response = await fetch('https://api.real-estate-manager.redberryinternship.ge/api/agents', {
                 method: 'POST',
-                headers: {
-                    'Authorization': 'Bearer 9d0860ee-f016-45fd-96cf-aa55fdee790b',
-                },
+                headers: { 'Authorization': 'Bearer 9d0860ee-f016-45fd-96cf-aa55fdee790b' },
                 body: formDataToSend,
             });
 
             if (response.ok) {
                 handleClose();
                 localStorage.removeItem('agentData');
-                setFormData({
-                    name: '',
-                    surname: '',
-                    email: '',
-                    phone: '',
-                    avatar: ''
-                });
+                setFormData({ name: '', surname: '', email: '', phone: '', avatar: '' });
                 setImagePreview(null);
             }
-
         } catch (error) {
             console.error('Error adding agent:', error);
         }
     };
-    
+
     return (
         <>
             <button className="custom-button-2" onClick={handleOpen}>
@@ -230,7 +244,7 @@ const AddAgent = ({ show, handleOpen, handleClose }) => {
                                         onClick={() => document.getElementById('imageInput').click()}
                                     >
                                         {imagePreview ? (
-                                            <div style={{ position: 'relative'}}>
+                                            <div style={{ position: 'relative' }}>
                                                 <img src={imagePreview} alt="Preview"
                                                     style={{
                                                         maxWidth: '84px',
@@ -245,7 +259,9 @@ const AddAgent = ({ show, handleOpen, handleClose }) => {
                                                         right: '-7px',
                                                         width: '20px',
                                                         height: '20px',
+                                                        cursor: 'pointer',
                                                     }}
+                                                    onClick={handleImageRemove}
                                                 />
                                             </div>
                                         ) : (
@@ -255,6 +271,9 @@ const AddAgent = ({ show, handleOpen, handleClose }) => {
                                             accept="image/*" required style={{ display: 'none' }}
                                         />
                                     </div>
+                                    <Form.Text className="firaGoBook">
+                                        {errors.avatar && <div className="text-danger">{errors.avatar}</div>}
+                                    </Form.Text>
                                 </Form.Group>
                             </Col>
                         </Row>

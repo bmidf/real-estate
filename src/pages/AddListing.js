@@ -152,7 +152,7 @@ const AddListing = () => {
                 const result = await response.json();
                 console.log(result);
                 localStorage.removeItem('realEstate');
-                navigate('/');
+                navigate('/real-estate');
             } else {
                 const errorData = await response.json();
                 console.error('Error creating real estate listing:', errorData);
@@ -164,7 +164,7 @@ const AddListing = () => {
     
     const handleCancel = () => {
         localStorage.removeItem('realEstate');
-        navigate('/');
+        navigate('/real-estate');
     }
     
 

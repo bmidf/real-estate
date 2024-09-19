@@ -61,16 +61,16 @@ const Listing = () => {
     }
 
     return (
-        <Container>
+        <Container style={{ maxWidth: '1620px', margin: '0 auto'}}>
             <button className='firaGoBook' onClick={() => navigate(-1)} 
                 style={{ backgroundColor: 'white',  border: '0px',  fontSize: '21px', cursor: 'pointer', }}
             >
                 <IoArrowBackOutline style={{ marginRight: '5px' }} />
             </button>
             <Row style={{ height: '714px', marginTop: '10px'}}>
-                <Col md={7} style={{ position: 'relative' }}>
+                <Col md={7} style={{ position: 'relative', maxWidth: '863px' }}>
                     <Card.Img variant="top" src={realEstate.image} alt={realEstate.address}
-                        style={{ borderRadius: '14px 14px 0 0', height: '90%'}}
+                        style={{ borderRadius: '14px 14px 0 0'}}
                     />
                     <div className='firaGoBook'
                         style={{width: '142px', position: 'absolute', top: '30px', left: '30px', backgroundColor: '#02152680', color: 'white',  
@@ -84,7 +84,7 @@ const Listing = () => {
                     </div>
                 </Col>
 
-                <Col style={{ padding: '40px'}}>
+                <Col style={{ padding: '40px', maxWidth: '582px'}}>
                     <span className='firaGoBold' style={{ fontSize: '48px'}}>
                         {realEstate.price} ₾
                     </span>

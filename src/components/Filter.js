@@ -55,27 +55,29 @@ const Filter = ({ onFilter, filters }) => {
     const handleClose = () => setShow(false);
 
     return (
-        <Container>
-            <Row className="d-flex justify-content-between firaGoBold" style={{ marginTop: '10px' }}>
-                <Col className="d-flex" style={{ border: '1px solid #DBDBDB', borderRadius: '12px' }}>
-                    <DropdownButton variant="white" title="რეგიონი" autoClose="outside">
+        <Container fluid style={{ maxWidth: '1596px', margin: '0 auto' }}>
+            <Row className="d-flex justify-content-between  firaGoBold" style={{ marginTop: '10px' }}>
+                <Col xs={4} md={4} lg={8} className="d-flex flex-wrap justify-content-start">
+                    <DropdownButton variant="white" title="რეგიონი" autoClose="outside" className="mb-2 mb-md-0 me-2">
                         <RegionFilter onRegionFilter={handleRegionFilter} selectedRegions={selectedRegions} />
                     </DropdownButton>
-                    <DropdownButton variant="white" title="საფასო კატეგორია" autoClose="outside">
+                    <DropdownButton variant="white" title="საფასო კატეგორია" autoClose="outside" className="mb-2 mb-md-0 me-2">
                         <PriceFilter onPriceFilter={handlePriceFilter} priceRange={priceRange} />
                     </DropdownButton>
-                    <DropdownButton variant="white" title="ფართობის კატეგორია" autoClose="outside">
+                    <DropdownButton variant="white" title="ფართობის კატეგორია" autoClose="outside" className="mb-2 mb-md-0 me-2">
                         <AreaFilter onAreaFilter={handleAreaFilter} areaRange={areaRange} />
                     </DropdownButton>
-                    <DropdownButton variant="white" title="საძინებლების რაოდენობა" autoClose="outside">
+                    <DropdownButton variant="white" title="საძინებლების რაოდენობა" autoClose="outside" className="mb-2 mb-md-0">
                         <BedroomCount onBedroomCountFilter={handleBedroomCountFilter} />
                     </DropdownButton>
                 </Col>
-                <Col className="d-flex justify-content-end">
-                    <button className="custom-button firaGoBold me-2" onClick={handleAddListing} >
-                        <span style={{ marginRight: '5px' }}>+</span>ლისტინგის დამატება
+                <Col lg={4} className="d-flex justify-content-end" style={{ maxHeight: '50px' }}>
+                    <button className="custom-button firaGoBold me-2" onClick={handleAddListing} 
+                        style={{ width: '230px'}}>
+                        <span>+</span> ლისტინგის დამატება
                     </button>
-                    <AddAgent show={show} handleClose={handleClose} handleOpen={handleOpen} />
+                    <AddAgent show={show} handleClose={handleClose} handleOpen={handleOpen} 
+                        style={{ width: '203px', height: '47px' }} />
                 </Col>
             </Row>
         </Container>

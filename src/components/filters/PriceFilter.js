@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, InputGroup } from 'react-bootstrap';
 
 const PriceFilter = ({ onPriceFilter }) => {
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
     const [error, setError] = useState('');
+
+    useEffect(() => {
+        if (Number(maxPrice) < Number(minPrice) && minPrice !== '' && maxPrice !== '') {
+            setError('გთხოვთ შეიყვანოთ ვალიდური რიცხვები');
+        } else {
+            setError('');
+        }
+    }, [minPrice, maxPrice]);
 
     const handleApply = () => {
         if (Number(maxPrice) < Number(minPrice)) {
@@ -19,20 +27,10 @@ const PriceFilter = ({ onPriceFilter }) => {
 
     const handleMinPriceSelect = (price) => {
         setMinPrice(price);
-        if (Number(price) > Number(maxPrice) && maxPrice !== '') {
-            setError('გთხოვთ შეიყვანოთ ვალიდური რიცხვები');
-        } else {
-            setError('');
-        }
     };
 
     const handleMaxPriceSelect = (price) => {
         setMaxPrice(price);
-        if (Number(price) < Number(minPrice) && minPrice !== '') {
-            setError('გთხოვთ შეიყვანოთ ვალიდური რიცხვები');
-        } else {
-            setError('');
-        }
     };
     
     return (
@@ -42,13 +40,9 @@ const PriceFilter = ({ onPriceFilter }) => {
                 <Col>
                     <Form.Group>
                         <InputGroup>
-                            <Form.Control
-                                type="number"
-                                value={minPrice}
-                                placeholder='დან'
-                                className='firaGoBook'
-                                onChange={(e) => setMinPrice(e.target.value)}
-                                style={error ? { borderColor: 'red', boxShadow: '0 0 0 .1rem rgba(255, 0, 0, .25)' } : { boxShadow: '0 0 0 0 #fff' }}
+                            <Form.Control type="number" value={minPrice} placeholder='დან' className='firaGoBook'
+                                onChange={(e) => handleMinPriceSelect(e.target.value)}
+                                style={error ? { borderColor: 'red', boxShadow: '0 0 0 1px rgba(255, 0, 0, .25)' } : { boxShadow: '0 0 0 0 #fff' }}
                             />
                             <InputGroup.Text>₾</InputGroup.Text>
                         </InputGroup>
@@ -57,13 +51,9 @@ const PriceFilter = ({ onPriceFilter }) => {
                 <Col>
                     <Form.Group>
                         <InputGroup>
-                            <Form.Control
-                                type="number"
-                                value={maxPrice}
-                                placeholder="მდე"
-                                className='firaGoBook'
-                                onChange={(e) => setMaxPrice(e.target.value)}
-                                style={error ? { borderColor: 'red', boxShadow: '0 0 0 .1rem rgba(255, 0, 0, .25)' } : { boxShadow: '0 0 0 0 #fff' }}
+                            <Form.Control type="number" value={maxPrice} placeholder="მდე" className='firaGoBook'
+                                onChange={(e) => handleMaxPriceSelect(e.target.value)}
+                                style={error ? { borderColor: 'red', boxShadow: '0 0 0 1px rgba(255, 0, 0, .25)' } : { boxShadow: '0 0 0 0 #fff' }}
                             />
                             <InputGroup.Text>₾</InputGroup.Text>
                         </InputGroup>
@@ -73,7 +63,7 @@ const PriceFilter = ({ onPriceFilter }) => {
             {error && (
                 <Row>
                     <Col>
-                        <div style={{ color: 'red', marginTop: '5px', fontSize: '10px' }}>
+                        <div className="firaGoBook" style={{ color: 'red', marginTop: '5px', fontSize: '14px' }}>
                             {error}
                         </div>
                     </Col>
@@ -83,10 +73,7 @@ const PriceFilter = ({ onPriceFilter }) => {
                 <Col>
                     <Form.Label>მინ. ფასი</Form.Label>
                     {[50000, 100000, 150000, 200000, 250000, 300000].map((price) => (
-                        <Form.Label 
-                            className='firaGoBook'
-                            key={price}
-                            onClick={() => handleMinPriceSelect(price)}
+                        <Form.Label className='firaGoBook' key={price} onClick={() => handleMinPriceSelect(price)}
                             style={{ cursor: 'pointer', display: 'block', marginBottom: '5px' }}
                         >
                             {price.toLocaleString()} ₾
@@ -96,10 +83,7 @@ const PriceFilter = ({ onPriceFilter }) => {
                 <Col>
                     <Form.Label>მაქს. ფასი</Form.Label>
                     {[50000, 100000, 150000, 200000, 250000, 300000].map((price) => (
-                        <Form.Label
-                            className='firaGoBook'
-                            key={price}
-                            onClick={() => handleMaxPriceSelect(price)}
+                        <Form.Label className='firaGoBook' key={price} onClick={() => handleMaxPriceSelect(price)}
                             style={{ cursor: 'pointer', display: 'block', marginBottom: '5px' }}
                         >
                             {price.toLocaleString()} ₾

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, InputGroup } from 'react-bootstrap';
 
 const AreaFilter = ({ onAreaFilter }) => {
@@ -6,33 +6,31 @@ const AreaFilter = ({ onAreaFilter }) => {
     const [maxArea, setMaxArea] = useState('');
     const [error, setError] = useState('');
 
+    useEffect(() => {
+        if (Number(maxArea) < Number(minArea) && minArea !== '' && maxArea !== '') {
+            setError('გთხოვთ შეიყვანოთ ვალიდური რიცხვები');
+        } else {
+            setError('');
+        }
+    }, [minArea, maxArea]);
+
     const handleApply = () => {
         if (Number(maxArea) < Number(minArea)) {
             setError('გთხოვთ შეიყვანოთ ვალიდური რიცხვები');
         } else {
             setError('');
             onAreaFilter({ min: minArea, max: maxArea });
-            setMinArea(''); 
-            setMaxArea(''); 
+            setMinArea('');
+            setMaxArea('');
         }
     };
 
     const handleMinAreaSelect = (area) => {
         setMinArea(area);
-        if (Number(area) > Number(maxArea) && maxArea !== '') {
-            setError('გთხოვთ შეიყვანოთ ვალიდური რიცხვები');
-        } else {
-            setError('');
-        }
     };
 
     const handleMaxAreaSelect = (area) => {
         setMaxArea(area);
-        if (Number(area) < Number(minArea) && minArea !== '') {
-            setError('გთხოვთ შეიყვანოთ ვალიდური რიცხვები');
-        } else {
-            setError('');
-        }
     };
     
     return (
@@ -42,12 +40,8 @@ const AreaFilter = ({ onAreaFilter }) => {
                 <Col>
                     <Form.Group>
                         <InputGroup>
-                            <Form.Control
-                                type="number"
-                                value={minArea}
-                                placeholder='დან'
-                                className='firaGoBook'
-                                onChange={(e) => setMinArea(e.target.value)}
+                            <Form.Control type="number" value={minArea} placeholder='დან' className='firaGoBook'
+                                onChange={(e) => handleMinAreaSelect(e.target.value)}
                                 style={error ? { borderColor: 'red', boxShadow: '0 0 0 .1rem rgba(255, 0, 0, .25)' } : { boxShadow: '0 0 0 0 #fff' }}
                             />
                             <InputGroup.Text>მ²</InputGroup.Text>
@@ -57,12 +51,8 @@ const AreaFilter = ({ onAreaFilter }) => {
                 <Col>
                     <Form.Group>
                         <InputGroup>
-                            <Form.Control
-                                type="number"
-                                value={maxArea}
-                                placeholder="მდე"
-                                className='firaGoBook'
-                                onChange={(e) => setMaxArea(e.target.value)}
+                            <Form.Control type="number" value={maxArea} placeholder="მდე" className='firaGoBook'
+                                onChange={(e) => handleMaxAreaSelect(e.target.value)}
                                 style={error ? { borderColor: 'red', boxShadow: '0 0 0 .1rem rgba(255, 0, 0, .25)' } : { boxShadow: '0 0 0 0 #fff' }}
                             />
                             <InputGroup.Text>მ²</InputGroup.Text>
@@ -73,7 +63,7 @@ const AreaFilter = ({ onAreaFilter }) => {
             {error && (
                 <Row>
                     <Col>
-                        <div style={{ color: 'red', marginTop: '5px', fontSize: '10px' }}>
+                        <div className='firaGoBook' style={{ color: 'red', marginTop: '5px', fontSize: '14px' }}>
                             {error}
                         </div>
                     </Col>
@@ -83,10 +73,7 @@ const AreaFilter = ({ onAreaFilter }) => {
                 <Col>
                     <Form.Label>მინ. მ²</Form.Label>
                     {[50, 100, 150, 200, 250, 300].map((area) => (
-                        <Form.Label 
-                            className='firaGoBook'
-                            key={area}
-                            onClick={() => handleMinAreaSelect(area)}
+                        <Form.Label className='firaGoBook' key={area} onClick={() => handleMinAreaSelect(area)}
                             style={{ cursor: 'pointer', display: 'block', marginBottom: '5px' }}
                         >
                             {area.toLocaleString()} მ²
@@ -96,10 +83,7 @@ const AreaFilter = ({ onAreaFilter }) => {
                 <Col>
                     <Form.Label>მაქს. მ²</Form.Label>
                     {[50, 100, 150, 200, 250, 300].map((area) => (
-                        <Form.Label
-                            className='firaGoBook'
-                            key={area}
-                            onClick={() => handleMaxAreaSelect(area)}
+                        <Form.Label className='firaGoBook' key={area} onClick={() => handleMaxAreaSelect(area)}
                             style={{ cursor: 'pointer', display: 'block', marginBottom: '5px' }}
                         >
                             {area.toLocaleString()} მ²

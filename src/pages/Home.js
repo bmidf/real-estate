@@ -98,7 +98,7 @@ const Home = () => {
     }
 
     return (
-        <Container>
+        <Container style={{ maxWidth: '1616px', margin: '0 auto'}}>
             <Filter onFilter={handleFilter} filters={filters} />
             <Row className="d-flex justify-content-start align-items-center firaGoBold" style={{ marginTop: '20px' }}>
                 <Col xs="auto">
@@ -116,13 +116,13 @@ const Home = () => {
                     აღნიშნული მონაცემებით განცხადება არ იძებნება
                 </div>
             ) : (
-                <Row>
-                    {filteredRealEstates.map((realEstate, index) => (
-                        <Col key={index} xs={12} sm={6} md={4} lg={3}>
-                            <CustomCard realEstate={realEstate} />
-                        </Col>
-                    ))}
-                </Row>
+                <Row className="g-4">
+                {filteredRealEstates.map((realEstate, index) => (
+                    <Col key={index} xs={12} sm={6} md={4} lg={3}>
+                        <CustomCard realEstate={realEstate} />
+                    </Col>
+                ))}
+            </Row>
             )}
         </Container>
     );

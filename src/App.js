@@ -8,7 +8,7 @@ import { Container } from 'react-bootstrap';
 
 function App() {
   return (
-    <Container className="App">
+    <Container className="App" style={{ maxWidth: '1620px', margin: '0 auto'}}>
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
