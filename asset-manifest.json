@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/real-estate/static/css/main.3985e296.css",
-    "main.js": "/real-estate/static/js/main.d413a878.js",
+    "main.css": "/real-estate/static/css/main.d23e8a7f.css",
+    "main.js": "/real-estate/static/js/main.ba3b8b85.js",
     "static/media/FiraGO-Bold.ttf": "/real-estate/static/media/FiraGO-Bold.6873f2abdb06d26ed2be.ttf",
     "static/media/FiraGO-Medium.ttf": "/real-estate/static/media/FiraGO-Medium.c20fbd9f06e6da20dccf.ttf",
     "static/media/FiraGO-Book.ttf": "/real-estate/static/media/FiraGO-Book.f76cd3d7804d686061e8.ttf",
@@ -12,11 +12,12 @@
     "static/media/slick.woff": "/real-estate/static/media/slick.295183786cd8a1389865.woff",
     "static/media/TrashButton.svg": "/real-estate/static/media/TrashButton.e9c0516f32edeb14a717d2ab1301d247.svg",
     "index.html": "/real-estate/index.html",
-    "main.3985e296.css.map": "/real-estate/static/css/main.3985e296.css.map",
-    "main.d413a878.js.map": "/real-estate/static/js/main.d413a878.js.map"
+    "static/media/Area.svg": "/real-estate/static/media/Area.5502b694fe16d0e3dca8f34041eb3851.svg",
+    "main.d23e8a7f.css.map": "/real-estate/static/css/main.d23e8a7f.css.map",
+    "main.ba3b8b85.js.map": "/real-estate/static/js/main.ba3b8b85.js.map"
   },
   "entrypoints": [
-    "static/css/main.3985e296.css",
-    "static/js/main.d413a878.js"
+    "static/css/main.d23e8a7f.css",
+    "static/js/main.ba3b8b85.js"
   ]
 }
