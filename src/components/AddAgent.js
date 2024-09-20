@@ -26,7 +26,6 @@ const AddAgent = ({ show, handleOpen, handleClose }) => {
         if (formData.name.length < 2) newErrors.name = 'მინიმუმ ორი სიმბოლო';
         if (formData.surname.length < 2) newErrors.surname = 'მინიმუმ ორი სიმბოლო';
         if (!formData.email.endsWith('@redberry.ge')) newErrors.email = 'ელ.ფოსტა უნდა მთავრდებოდეს @redberry.ge-ით';
-        if (!!/^\d+$/.test(formData.phone)) newErrors.phone = 'მხოლოდ რიცხვები';
         if (!/^[5]\d{8}$/.test(formData.phone)) newErrors.phone = 'ნომრის ფორმატი: 5XXXXXXXXX';
 
         if (imageSizeError) newErrors.avatar = imageSizeError;
@@ -50,8 +49,7 @@ const AddAgent = ({ show, handleOpen, handleClose }) => {
             else if (name === 'surname') delete newErrors.surname;
             if (name === 'email' && !value.endsWith('@redberry.ge')) newErrors.email = 'გამოიყენეთ @redberry.ge ფოსტა';
             else if (name === 'email') delete newErrors.email;
-            if (name === 'phone' && !/^\d+$/.test(value)) newErrors.phone = 'მხოლოდ რიცხვები';
-            else if (name === 'phone' && !/^[5]\d{8}$/.test(value)) newErrors.phone = 'ნომრის ფორმატი: 5XXXXXXXXX';
+            if (name === 'phone' && !/^[5]\d{8}$/.test(value)) newErrors.phone = 'ნომრის ფორმატი: 5XXXXXXXXX';
             else if (name === 'phone') delete newErrors.phone;
 
             if (name === 'avatar') {
@@ -117,7 +115,10 @@ const AddAgent = ({ show, handleOpen, handleClose }) => {
 
             const response = await fetch('https://api.real-estate-manager.redberryinternship.ge/api/agents', {
                 method: 'POST',
-                headers: { 'Authorization': 'Bearer 9d0860ee-f016-45fd-96cf-aa55fdee790b' },
+                headers: { 
+                    'Authorization': 'Bearer 9cfc6240-ffc9-44ab-b4ed-b792a03c592f',
+                    'Accept': 'application/json'
+                },
                 body: formDataToSend,
             });
 
@@ -134,9 +135,6 @@ const AddAgent = ({ show, handleOpen, handleClose }) => {
 
     return (
         <>
-            <button className="custom-button-2" onClick={handleOpen}>
-                <span style={{ marginRight: '5px' }}>+</span>აგენტის დამატება
-            </button>
             <Modal
                 className="firaGoBold input-decoration"
                 size='xl'
@@ -212,7 +210,7 @@ const AddAgent = ({ show, handleOpen, handleClose }) => {
                                         <Form.Label style={{ fontSize: '14px' }}>ტელეფონის ნომერი *</Form.Label>
                                         <Form.Control
                                             className="firaGoBook"
-                                            type="text"
+                                            type="number"
                                             name="phone"
                                             value={formData.phone}
                                             onChange={handleChange}
@@ -241,7 +239,7 @@ const AddAgent = ({ show, handleOpen, handleClose }) => {
                                             position: 'relative',
                                             overflow: 'hidden',
                                         }}
-                                        onClick={() => document.getElementById('imageInput').click()}
+                                        onClick={() => document.getElementById('agentImageInput').click()}
                                     >
                                         {imagePreview ? (
                                             <div style={{ position: 'relative' }}>
@@ -267,7 +265,7 @@ const AddAgent = ({ show, handleOpen, handleClose }) => {
                                         ) : (
                                             <CiCirclePlus style={{ fontSize: '34px', color: 'grey' }} />
                                         )}
-                                        <Form.Control type="file" id="imageInput" onChange={handleImageChange}
+                                        <Form.Control type="file" id="agentImageInput" onChange={handleImageChange}
                                             accept="image/*" required style={{ display: 'none' }}
                                         />
                                     </div>

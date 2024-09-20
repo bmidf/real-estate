@@ -4,14 +4,18 @@ import { useNavigate } from 'react-router-dom';
 import { CiCirclePlus } from 'react-icons/ci';
 import { IoMdCheckmark } from "react-icons/io";
 import TrashButton from '../assets/icons/TrashButton.svg';
+import AddAgent from '../components/AddAgent';
 
 const AddListing = () => {
     const navigate = useNavigate();
+    const [errors, setErrors] = useState({});
+    const [imageSizeError, setImageSizeError] = useState('');
     const [imagePreview, setImagePreview] = useState(null);
     const [regions, setRegions] = useState([]);
     const [cities, setCities] = useState([]);
     const [filteredCities, setFilteredCities] = useState([]);
     const [agents, setAgents] = useState([]);
+    const [showAgentModal, setShowAgentModal] = useState(false);
     const [realEstate, setRealEstate] = useState({
         price: '',
         zip_code: '',
@@ -21,14 +25,9 @@ const AddListing = () => {
         address: '',
         bedrooms: '',
         is_rental: '0',
-        image: null,
+        image: '',
         agent_id: '',
         region_id: '', 
-    });
-
-    const [errors, setErrors] = useState({
-        address: '',
-        description: '',
     });
 
     useEffect(() => {
@@ -62,7 +61,8 @@ const AddListing = () => {
     useEffect(() => {
         const storedData = JSON.parse(localStorage.getItem('realEstate')) || {};
         setRealEstate(prevState => ({ ...prevState, ...storedData }));
-    
+        if (storedData.image) setImagePreview(storedData.image);
+
         if (storedData.region_id) {
             const selectedRegionId = parseInt(storedData.region_id, 10);
             const filtered = cities.filter(city => city.region_id === selectedRegionId);
@@ -74,29 +74,51 @@ const AddListing = () => {
         }
     }, [cities]);
     
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+    const handleChange = ({ target: { name, value } }) => {
         setRealEstate(prevState => {
             const newState = { ...prevState, [name]: value };
             localStorage.setItem('realEstate', JSON.stringify(newState));
             return newState;
         });
     
-        if (name === 'address') {
-            if (value.length < 2 && value.length > 0) {
-                setErrors(prevErrors => ({ ...prevErrors, address: 'ჩაწერეთ ვალიდური მონაცემები' }));
-            } else {
-                setErrors(prevErrors => ({ ...prevErrors, address: '' }));
+        setErrors(prevErrors => {
+            const newErrors = { ...prevErrors };
+    
+            if (name === 'address') {
+                if (value.length < 2 && value.length > 0) {
+                    newErrors.address = 'ჩაწერეთ ვალიდური მონაცემები';
+                } else {
+                    delete newErrors.address;
+                }
             }
-        }
-        if (name === 'description') {
-            if (value.split(' ').length < 5 && value.length > 0) {
-                setErrors(prevErrors => ({ ...prevErrors, description: 'ჩაწერეთ ვალიდური მონაცემები' }));
-            } else {
-                setErrors(prevErrors => ({ ...prevErrors, description: '' }));
+
+            if (name === 'description') {
+                if (value.split(' ').length < 5 && value.length > 0) {
+                    newErrors.description = 'ჩაწერეთ ვალიდური მონაცემები';
+                } else {
+                    delete newErrors.description;
+                }
             }
-        }
-        
+    
+            if (name === 'bedrooms') {
+                if (value > 255) {
+                    newErrors.bedrooms = '255-ზე ნაკლები რიცხვი';
+                } else if (value.length > 0 && value <= 0) {
+                    newErrors.bedrooms = 'აუცილებლად პოზიტიური რიცხვი';
+                } else {
+                    delete newErrors.bedrooms;
+                }
+            }
+
+            if (name === 'image') {
+                if (imageSizeError) newErrors.image = imageSizeError;
+                else delete newErrors.image;
+            }
+
+    
+            return newErrors;
+        });
+    
         if (name === 'region_id') {
             const selectedRegionId = parseInt(value, 10);
             const filtered = cities.filter(city => city.region_id === selectedRegionId);
@@ -107,25 +129,48 @@ const AddListing = () => {
             }));
         }
     };
-    
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        setRealEstate(prevState => ({
-            ...prevState,
-            image: file,
-        }));
-    
+
+    const handleImageChange = ({ target: { files } }) => {
+        const file = files[0];
         if (file) {
+            if (file.size > 1 * 950 * 950) {
+                setImageSizeError('ფაილის ზომა არ უნდა აღემატებოდეს 1 მბ');
+                setErrors(prevErrors => ({ ...prevErrors, image: 'ფაილის ზომა არ უნდა აღემატებოდეს 1 მბ' }));
+                return;
+            }
+            setImageSizeError('');
+            setErrors(prevErrors => {
+                const newErrors = { ...prevErrors };
+                if (newErrors.image) delete newErrors.image;
+                return newErrors;
+            });
+
             const reader = new FileReader();
             reader.onloadend = () => {
-                setImagePreview(reader.result);
+                const base64String = reader.result;
+                setRealEstate(prevState => ({ ...prevState, image: base64String }));
+                localStorage.setItem('realEstate', JSON.stringify({ ...realEstate, image: base64String }));
+                setImagePreview(base64String);
             };
             reader.readAsDataURL(file);
         }
     };
-    
+
+    const handleImageRemove = () => {
+        setRealEstate(prevState => ({ ...prevState, image: '' }));
+        localStorage.setItem('realEstate', JSON.stringify({ ...realEstate, image: '' }));
+        setImagePreview(null);
+        setImageSizeError('');
+        setErrors(prevErrors => {
+            const newErrors = { ...prevErrors };
+            if (newErrors.image) delete newErrors.image;
+            return newErrors;
+        });
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(realEstate); 
+    
         const formData = new FormData();
         formData.append('price', realEstate.price);
         formData.append('zip_code', realEstate.zip_code);
@@ -135,7 +180,16 @@ const AddListing = () => {
         formData.append('address', realEstate.address);
         formData.append('bedrooms', realEstate.bedrooms);
         formData.append('is_rental', realEstate.is_rental);
-        formData.append('image', realEstate.image);
+    
+        if (realEstate.image) {
+            try {
+                const blob = await fetch(realEstate.image).then(res => res.blob());
+                formData.append('image', blob, 'image.png');
+            } catch (error) {
+                console.error('Error converting image to blob:', error);
+            }
+        }
+    
         formData.append('agent_id', realEstate.agent_id);
         formData.append('region_id', realEstate.region_id);
     
@@ -144,6 +198,7 @@ const AddListing = () => {
                 method: 'POST',
                 headers: {
                     'Authorization': 'Bearer 9cfc6240-ffc9-44ab-b4ed-b792a03c592f',
+                    'Accept': 'application/json'
                 },
                 body: formData,
             });
@@ -152,7 +207,8 @@ const AddListing = () => {
                 const result = await response.json();
                 console.log(result);
                 localStorage.removeItem('realEstate');
-                navigate('/real-estate');
+                setImagePreview(null);
+                navigate('/');
             } else {
                 const errorData = await response.json();
                 console.error('Error creating real estate listing:', errorData);
@@ -164,9 +220,21 @@ const AddListing = () => {
     
     const handleCancel = () => {
         localStorage.removeItem('realEstate');
-        navigate('/real-estate');
+        navigate('/');
     }
     
+    const handleAgentChange = (e) => {
+        const value = e.target.value;
+
+        if (value === 'add-agent') {
+            setShowAgentModal(true); 
+        } else {
+            setRealEstate(prevState => ({ ...prevState, agent_id: value }));
+            localStorage.setItem('realEstate', JSON.stringify({ ...realEstate, agent_id: value }));
+        }
+    };
+
+    const handleAgentClose = () => setShowAgentModal(false);
 
     return (
         <Container style={{ maxWidth: '812px', fontSize: '14px'}} className="input-decoration firaGoBold">
@@ -235,16 +303,16 @@ const AddListing = () => {
                                 }}
                             />
                             <Form.Text className="firaGoBook" style={{ color: realEstate.zip_code.length === 0 ? '#021526' : '#45A849' }}>
-                                <IoMdCheckmark/>{realEstate.area.length === 0 ? 'მხოლოდ რიცხვები' : 'მხოლოდ რიცხვები'}
+                                <IoMdCheckmark/>მხოლოდ რიცხვები
                             </Form.Text>
                         </Form.Group>
                     </Col>
                 </Row>
                 <Row className="mb-3">
-                    <Col>
-                        <Form.Group controlId="region_id">
-                            <Form.Label>რეგიონი</Form.Label>
-                                <Form.Control className="firaGoBook" as="select" name="region_id" onChange={handleChange} required>
+                <Col>
+                    <Form.Group controlId="region_id">
+                        <Form.Label>რეგიონი</Form.Label>
+                                <Form.Control className="firaGoBook" as="select" value={realEstate.region_id} name="region_id" onChange={handleChange} required>
                                     <option value="">აირჩიეთ რეგიონი</option>
                                     {regions.map((region) => (
                                         <option key={region.id} value={region.id}>{region.name}</option>
@@ -256,7 +324,7 @@ const AddListing = () => {
                         {realEstate.region_id && (
                             <Form.Group controlId="city_id">
                                 <Form.Label>ქალაქი</Form.Label>
-                                <Form.Control className="firaGoBook" as="select" name="city_id" onChange={handleChange} required>
+                                <Form.Control className="firaGoBook" as="select" value={realEstate.city_id} name="city_id" onChange={handleChange} required>
                                     <option value="">აირჩიეთ ქალაქი</option>
                                     {filteredCities.map((city) => (
                                         <option key={city.id} value={city.id}>{city.name}</option>
@@ -284,7 +352,7 @@ const AddListing = () => {
                                 }}
                             />
                             <Form.Text className="firaGoBook" style={{color: realEstate.price.length === 0 ? '#021526' : '#45A849' }}>
-                                <IoMdCheckmark/>{realEstate.area.length === 0 ? 'მხოლოდ რიცხვები' : 'მხოლოდ რიცხვები'}
+                                <IoMdCheckmark/>მხოლოდ რიცხვები
                             </Form.Text>
                         </Form.Group>
                     </Col>
@@ -304,7 +372,7 @@ const AddListing = () => {
                                 }}
                             />
                             <Form.Text className="firaGoBook" style={{ color: realEstate.area.length === 0 ? '#021526' : '#45A849' }}>
-                                <IoMdCheckmark/>{realEstate.area.length === 0 ? 'მხოლოდ რიცხვები' : 'მხოლოდ რიცხვები'}
+                                <IoMdCheckmark/>მხოლოდ რიცხვები
                             </Form.Text>
                         </Form.Group>
                     </Col>
@@ -325,8 +393,8 @@ const AddListing = () => {
                                     borderWidth: '1px'
                                 }}
                             />
-                            <Form.Text className="firaGoBook" style={{ color: realEstate.bedrooms.length === 0 ? '#021526' : '#45A849' }}>
-                                <IoMdCheckmark/>{realEstate.area.length === 0 ? 'მხოლოდ რიცხვები' : 'მხოლოდ რიცხვები'}
+                            <Form.Text className="firaGoBook" style={{ color: errors.bedrooms ? 'red' : realEstate.bedrooms.length === 0 ? '#021526' : '#45A849' }}>
+                                <IoMdCheckmark/>{errors.bedrooms || 'მხოლოდ რიცხვები'}
                             </Form.Text>
                         </Form.Group>
                     </Col>
@@ -390,15 +458,19 @@ const AddListing = () => {
                                                 width: '20px',
                                                 height: '20px',
                                             }}
+                                            onClick={handleImageRemove}
                                         />
                                     </div>
                                 ) : (
                                     <CiCirclePlus style={{ fontSize: '34px', color: 'grey' }} />
                                 )}
                                 <Form.Control type="file" id="imageInput" onChange={handleImageChange}
-                                    accept="image/*" required style={{ display: 'none' }}
+                                    accept="image/*"  style={{ display: 'none' }}
                                 />
                             </div>
+                            <Form.Text className="firaGoBook">
+                                {errors.image && <div className="text-danger">{errors.image}</div>}
+                            </Form.Text>
                         </Form.Group>
                     </Col>
                 </Row>
@@ -408,8 +480,9 @@ const AddListing = () => {
                     <Col>
                         <Form.Group controlId="agent_id">
                             <Form.Label>აირჩიე</Form.Label>
-                            <Form.Control className="firaGoBook" as="select" name="agent_id" onChange={handleChange} required>
+                            <Form.Control className="firaGoBook" as="select" value={realEstate.agent_id} name="agent_id" onChange={handleAgentChange} required>
                                 <option value="">აირჩიეთ აგენტი</option>
+                                <option value="add-agent">დაამატეთ აგენტი</option> 
                                 {agents.map((agent) => (
                                     <option key={agent.id} value={agent.id}>{agent.name} {agent.surname}</option>
                                 ))}
@@ -417,12 +490,13 @@ const AddListing = () => {
                         </Form.Group>
                     </Col>
                 </Row>
+                <AddAgent show={showAgentModal} handleClose={handleAgentClose} onHide={() => setShowAgentModal(false)} />
                 <Row className='d-flex justify-content-end firaGoBook'>
-                    <Col className='d-flex justify-content-end' style={{height: '47px', marginTop: '20px'}}>
+                    <Col className='d-flex justify-content-end' style={{height: '47px', marginTop: '20px', fontSize: '16px'}}>
                         <button onClick={handleCancel} className="custom-button-2" style={{width: '103px', marginRight: '10px'}}>
                             გაუქმება
                         </button>
-                        <button className="custom-button me-2" type="submit" style={{width: '187px'}}>
+                        <button className="custom-button" type="submit" style={{width: '200px'}}>
                             დაამატე ლისტინგი
                         </button>
                     </Col>

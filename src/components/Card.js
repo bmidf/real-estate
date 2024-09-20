@@ -15,7 +15,7 @@ const CustomCard = ({ realEstate }) => {
 
     return (
         <Card 
-            style={{marginTop: '10px', height: '455px', width: '386px', cursor: 'pointer', transition: 'box-shadow 0.3s', border: '1px solid #dedede', borderRadius: '15px'}} 
+            style={{ height: '455px', width: '386px', cursor: 'pointer', transition: 'box-shadow 0.3s', border: '1px solid #dedede', borderRadius: '15px'}} 
             onMouseEnter={(e) => e.currentTarget.style.boxShadow = '4px 4px 12px rgba(0, 0, 0, 0.2)'}
             onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'none'}
             onClick={handleExploreClick}

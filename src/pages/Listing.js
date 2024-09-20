@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Card, Col, Row, Image } from 'react-bootstrap';
 import { IoIosBed } from "react-icons/io";
-import { PiCheckSquareOffsetFill } from "react-icons/pi";
 import { BsSignpostFill } from "react-icons/bs";
 import { MdOutlineEmail } from "react-icons/md";
 import { LuPhoneCall } from "react-icons/lu";
@@ -11,6 +10,7 @@ import { IoArrowBackOutline } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
 import Carousel from '../components/Carousel';
 import DeleteListingModal from '../components/DeleteListingModal';
+import Area from '../assets/icons/Area.svg';
 
 const Listing = () => {
     const { id } = useParams();
@@ -96,7 +96,7 @@ const Listing = () => {
                             </span>
                         </div>
                         <div style={{ marginTop: '10px' }}>
-                            <PiCheckSquareOffsetFill />
+                            <img src={Area} alt="area" style={{ width: '24px'}} />
                             <span style={{ marginLeft: '5px' }}>
                                 ფართი {realEstate.area} მ²
                             </span>
@@ -152,10 +152,10 @@ const Listing = () => {
                     </div>
                 </Col>
                 <Row className="firaGoBold d-flex" style={{fontSize: '32px', padding: '25px'}}>
-                    ბინები მსგავს ლოკაციაძე
+                    ბინები მსგავს ლოკაციაზე
                 </Row>
                 <Row style={{height: '500px'}}>
-                    <Carousel currentRealEstateId={realEstate.id} />
+                    <Carousel currentRealEstateId={realEstate.id} currentRegionId={realEstate.city.region.id} />
                 </Row>
             </Row>
         </Container>

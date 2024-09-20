@@ -19,6 +19,19 @@
   outline: none;
 }
 
+/*Custom Dropdown*/
+
+.custom-dropdown {
+  background-color: white !important;
+  color: black !important;
+  border: none !important; 
+}
+
+.custom-dropdown:focus, .custom-dropdown:hover, .custom-dropdown.show {
+  background-color: rgb(231, 231, 231) !important;
+  color: black !important;
+}
+
 /*Custom Button 2*/
 
 .custom-button-2 {

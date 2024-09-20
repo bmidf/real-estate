@@ -5,7 +5,7 @@ import { IoArrowForwardOutline, IoArrowBackOutline } from "react-icons/io5";
 import 'slick-carousel/slick/slick.css'; 
 import 'slick-carousel/slick/slick-theme.css';
 
-const Carousel = ({ currentRealEstateId }) => {
+const Carousel = ({ currentRealEstateId, currentRegionId }) => {
     const [relatedRealEstates, setRelatedRealEstates] = useState([]);
 
     useEffect(() => {
@@ -17,7 +17,9 @@ const Carousel = ({ currentRealEstateId }) => {
                     },
                 });
                 const data = await response.json();
-                const filteredData = data.filter(realEstate => realEstate.id !== currentRealEstateId);
+                const filteredData = data.filter(realEstate => 
+                    realEstate.id !== currentRealEstateId && realEstate.city.region.id === currentRegionId
+                );
                 setRelatedRealEstates(filteredData);
             } catch (error) {
                 console.error('Error fetching related real estates:', error);
@@ -25,48 +27,50 @@ const Carousel = ({ currentRealEstateId }) => {
         };
 
         fetchRelatedRealEstates();
-    }, [currentRealEstateId]); 
+    }, [currentRealEstateId, currentRegionId]);
+
+    const showArrows = relatedRealEstates.length >= 4;
 
     const SamplePrevArrow = (props) => {
         const { className, onClick } = props;
-        return(
-          <div onClick={onClick} className={`arrow ${className}`} >
-            <IoArrowBackOutline className="arrows" style={{color:"black"}}/>
-          </div>
-        )
-    }
-  
+        return showArrows ? (
+            <div onClick={onClick} className={`arrow ${className}`}>
+                <IoArrowBackOutline className="arrows" style={{ color: "black" }} />
+            </div>
+        ) : null;
+    };
+
     const SampleNextArrow = (props) => {
         const { className, onClick } = props;
-        return(
-          <div onClick={onClick} className={`arrow ${className}`} >
-            <IoArrowForwardOutline className="arrows" style={{color:"black"}}/>
-          </div>
-        )
-    }
+        return showArrows ? (
+            <div onClick={onClick} className={`arrow ${className}`}>
+                <IoArrowForwardOutline className="arrows" style={{ color: "black" }} />
+            </div>
+        ) : null;
+    };
 
     const settings = {
-        infinite: true,
+        infinite: relatedRealEstates.length >= 4,
         speed: 500,
-        slidesToShow: 4,
-        slidesToScroll: 4,
+        slidesToShow: Math.min(4, relatedRealEstates.length),
+        slidesToScroll: Math.min(4, relatedRealEstates.length),
         nextArrow: <SampleNextArrow />,
         prevArrow: <SamplePrevArrow />,
         responsive: [
             {
-                breakpoint: 1200,
+                breakpoint: 1620,
                 settings: {
-                    slidesToShow: 3,
+                    slidesToShow: Math.min(3, relatedRealEstates.length),
                 },
             },
             {
-                breakpoint: 992, 
+                breakpoint: 1250,
                 settings: {
-                    slidesToShow: 2,
+                    slidesToShow: Math.min(2, relatedRealEstates.length),
                 },
             },
             {
-                breakpoint: 768,
+                breakpoint: 870,
                 settings: {
                     slidesToShow: 1,
                 },
