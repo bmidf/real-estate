@@ -1,50 +1,48 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
+import { IoCloseOutline } from "react-icons/io5";
 
-const FilterSummary = ({ filters }) => {
+const FilterSummary = ({ filters, onRemoveFilter }) => {
     const { regions, price, area, bedrooms } = filters;
 
+    const renderButtonWithClose = (label, filterType, value) => (
+        <button
+            className="firaGoBook"
+            style={{
+                backgroundColor: 'transparent',
+                borderRadius: '43px',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                border: '1px solid #DBDBDB',
+                marginRight: '5px',
+                height: '29px',
+                padding: '6px 10px 6px 10px'
+            }}
+        >
+            {label}
+            <span
+                onClick={() => onRemoveFilter(filterType, value)}
+                style={{
+                    marginLeft: '10px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                }}
+            >
+                <IoCloseOutline/>
+            </span>
+        </button>
+    );
+
     const renderRegions = () => {
-        if (regions.length > 0) {
-            return (
-                <button 
-                    className="firaGoBook"
-                    style={{
-                        backgroundColor: 'transparent',
-                        borderRadius: '30px',
-                        padding: '5px',
-                        cursor: 'pointer',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        border: '1px solid #DBDBDB'
-                    }}
-                >
-                {regions.join(', ')}
-            </button>
-            );
-        }
+        return regions.map(region => renderButtonWithClose(region, 'regions', region));
     };
 
     const renderPrice = () => {
         const minPrice = price.min ? `${price.min}₾` : '';
         const maxPrice = price.max ? `${price.max}₾` : '';
         if (minPrice || maxPrice) {
-            return (
-                <button 
-                    className="firaGoBook"
-                    style={{
-                        backgroundColor: 'transparent',
-                        borderRadius: '30px',
-                        padding: '5px',
-                        cursor: 'pointer',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        border: '1px solid #DBDBDB'
-                    }}
-                >
-                    {minPrice} {minPrice && maxPrice ? '-' : ''} {maxPrice}
-                </button>
-            );
+            return renderButtonWithClose(`${minPrice} ${minPrice && maxPrice ? '-' : ''} ${maxPrice}`, 'price', {});
         }
     };
 
@@ -52,43 +50,13 @@ const FilterSummary = ({ filters }) => {
         const minArea = area.min ? `${area.min} მ²` : '';
         const maxArea = area.max ? `${area.max} მ²` : '';
         if (minArea || maxArea) {
-            return (
-                <button 
-                    className="firaGoBook"
-                    style={{
-                        backgroundColor: 'transparent',
-                        borderRadius: '30px',
-                        padding: '5px',
-                        cursor: 'pointer',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        border: '1px solid #DBDBDB'
-                    }}
-                >
-                    {minArea} {minArea && maxArea ? '-' : ''} {maxArea}
-                </button>
-            );
+            return renderButtonWithClose(`${minArea} ${minArea && maxArea ? '-' : ''} ${maxArea}`, 'area', {});
         }
     };
 
     const renderBedrooms = () => {
         if (bedrooms) {
-            return (
-                <button 
-                    className="firaGoBook"
-                    style={{
-                        backgroundColor: 'transparent',
-                        borderRadius: '30px',
-                        padding: '5px',
-                        cursor: 'pointer',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        border: '1px solid #DBDBDB'
-                    }}
-                >
-                    {bedrooms}
-                </button>
-            );
+            return renderButtonWithClose(`${bedrooms}`, 'bedrooms', '');
         }
     };
 

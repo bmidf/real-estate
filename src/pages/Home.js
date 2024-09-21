@@ -91,6 +91,23 @@ const Home = () => {
         localStorage.removeItem('filters');
     };
 
+    const onRemoveFilter = (filterType, value) => {
+        const updatedFilters = { ...filters };
+
+        if (filterType === 'regions') {
+            updatedFilters.regions = updatedFilters.regions.filter(region => region !== value);
+        } else if (filterType === 'price') {
+            updatedFilters.price = { min: '', max: '' };
+        } else if (filterType === 'area') {
+            updatedFilters.area = { min: '', max: '' };
+        } else if (filterType === 'bedrooms') {
+            updatedFilters.bedrooms = '';
+        }
+
+        setFilters(updatedFilters);
+        localStorage.setItem('filters', JSON.stringify(updatedFilters));
+    };
+
     const isFilterApplied = filters.regions.length > 0 || filters.price.min || filters.price.max || filters.area.min || filters.area.max || filters.bedrooms;
 
     if (realEstates.length === 0) {
@@ -102,28 +119,29 @@ const Home = () => {
             <Filter onFilter={handleFilter} filters={filters} />
             <Row className="d-flex justify-content-start align-items-center firaGoBold" style={{ marginTop: '20px' }}>
                 <Col xs="auto">
-                    <FilterSummary filters={filters} />
+                    <FilterSummary filters={filters} onRemoveFilter={onRemoveFilter} />
                 </Col>
                 {isFilterApplied && (
                     <Col xs="auto">
-                        <Button variant='white' onClick={clearFilters} style={{fontSize: '14px'}}>გასუფთავება</Button>
+                        <Button variant='white' onClick={clearFilters} style={{ fontSize: '14px' }}>გასუფთავება</Button>
                     </Col>
                 )}
             </Row>
 
             {filteredRealEstates.length === 0 ? (
-                <div className="firaGoBook d-flex justify-content-start" style={{ marginTop: '60px', textAlign: 'center' }}>
+                <div className="firaGoBook d-flex justify-content-start" style={{ textAlign: 'center' }}>
                     აღნიშნული მონაცემებით განცხადება არ იძებნება
                 </div>
             ) : (
-                <Row className="g-4">
-                {filteredRealEstates.map((realEstate, index) => (
-                    <Col key={index} xs={12} sm={6} md={4} lg={3}>
-                        <CustomCard realEstate={realEstate} />
-                    </Col>
-                ))}
-            </Row>
+                <Row className="g-4" style={{marginTop: '5px'}}>
+                    {filteredRealEstates.map((realEstate, index) => (
+                        <Col key={index} xs={12} sm={6} md={4} lg={3}>
+                            <CustomCard realEstate={realEstate} />
+                        </Col>
+                    ))}
+                </Row>
             )}
+            <Row style={{ height: '20px' }}></Row>
         </Container>
     );
 };

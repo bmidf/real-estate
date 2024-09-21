@@ -17,8 +17,8 @@ const BedroomCount = ({ onBedroomCountFilter }) => {
                     type="number"
                     value={bedroomCount}
                     onChange={(e) => setBedroomCount(e.target.value)}
-                    placeholder="რაოდენობა"
-                    style={{boxShadow: '0 0 0 0 #fff'}}
+                    placeholder="2"
+                    style={{boxShadow: '0 0 0 0 #fff', width: '40px'}}
                 />
             </Form.Group>
             <Row className="justify-content-end me-2">
